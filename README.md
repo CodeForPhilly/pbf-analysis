@@ -9,14 +9,14 @@ This is a timeboxed project - with project kickoff on 6/16/20 and projects due 8
 Hackers may participate in teams or solo, data collected by the Bail Fund will be made available by 6/18.
 
 ## Questions to be answered/analyzed.
-- Which municipalities have highest average bail? 
+- Which municipalities have highest average bail?
 - Are there disparities in bail by race, gender, age?
 - What is conviction rate of individuals by bail amount?
 
 *additional questions will be added as data exploration is complete*
 
 ## Data
-Draft data can be found here. Data dictionary found here.
+Draft data can be found [here](https://github.com/CodeForPhilly/pbf-analysis/blob/master/Data/0c_distinct_dockets.csv). Data dictionary found [here](https://github.com/CodeForPhilly/pbf-analysis/blob/master/Data/data_dictionary.csv).
 
 ## Other potential resources:
 - [Open Data Philly](https://www.opendataphilly.org/)
