@@ -13,12 +13,3 @@ profile_default/
 ipython_config.py
 
 # data
-*.csv
-*.xlsx
-*.csv.xlsx
-*.db
-*.jpg
-*.json
-*.zip
-*.png
-*.jpeg
