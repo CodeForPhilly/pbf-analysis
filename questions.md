@@ -13,7 +13,7 @@ These analysis will describe the current state of the bail system and address th
 
 - Q1.2 What is the race statistics of people impacted by bail? (wait for court summary to get race information) Related to Q2.2
 
-- Q1.2 What is the financial stability of the neighborhoods highly impacted by bail? 
+- Q1.3 What is the financial stability of the neighborhoods highly impacted by bail? 
 	* Use median hosuehold income of each zipcode to show that many people live in high poverty areas.
 
 ## 2. Relationships between bail type / amount and various factors 
