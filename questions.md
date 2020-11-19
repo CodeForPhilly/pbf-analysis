@@ -21,7 +21,7 @@ These analyses will address the question "what determines someone's bail type an
 
 - Q2.1 Relationship between bail type / amount and the following factors: 
 	- age, zipcode, magistrate, whether they were represented by a private lawyer or a public defender, amount of time detained before prelim/bail hearing (Data available in csv).
-	- race, geneder, offense type (Data will be available soon from scraped dockets an court summaries).
+	- race, gender, offense type (Data will be available soon from scraped dockets an court summaries).
 	- amount of time (detained or not) between arrest and case outcome decided (Data may be available from old dockets)
 
 - Q2.2 Relationship between defendant race and the following factors:
