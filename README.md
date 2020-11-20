@@ -15,7 +15,7 @@ List of questions for analysis can be found in [questions.md](questions.md)
 	2. Visualizations on magistrate information. 
 	3. Which neighborhoods are heavily impacted by the bail system?
 	4. Break down by race and gender
-	5. (If possible) Ho much Philadelphians paid in bail (by month or so)
+	5. (If possible) How much Philadelphians paid in bail (by month or so)
 * To do & timeline
 	* By December 14, 2020. 
 		* Create content & visualizations for dashboard
