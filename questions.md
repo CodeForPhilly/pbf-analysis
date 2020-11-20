@@ -20,7 +20,7 @@ These analyses will describe the current state of the Philadelphia bail system a
 These analyses will address the question "what determines someone's bail type and bail amount?" 
 
 - Q2.1 Relationship between bail type / amount and the following factors: 
-	- age, zipcode, magistrate, whether they were represented by a private lawyer or a public defender, amount of time detained before prelim/bail hearing (Data available in csv).
+	- age, zipcode, magistrate, whether they were represented by a private lawyer or a public defender, amount of time detained before prelim/bail hearing, time of hearing (Data available in csv).
 	- race, gender, offense type (Data will be available soon from scraped dockets an court summaries).
 	- amount of time (detained or not) between arrest and case outcome decided (Data may be available from old dockets)
 
@@ -36,6 +36,7 @@ These analyses will address the question "what determines someone's bail type an
 	* wait until we get the race, gender, and offense type information.
 
 - Q2.4 Relationship between outcomes (conviction, sentencing) and bail type, bail amount, and whether bail is posted (Data may be available from old dockets) 
+
 
 ## 3. Other questions
 - Does bail actually lead to better presence at trials? This analysis could be used to support the end of the bail system
