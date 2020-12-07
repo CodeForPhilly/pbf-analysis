@@ -1,14 +1,19 @@
 # pbf-analysis
 Stored repo of analysis project for the Philly Bail Fund
 
-
 Repository containing code built for analyzing data associated with Bail hearings and process in Philadelphia, in partnership with the [Philadelphia Bail Fund](https://www.phillybailfund.org/).  The goal of this project is to provide PBF with flexible tools for analyzing their efforts, the general bail system in Philadelphia, and potential findings that could influence decision makers.
 
 List of questions for analysis can be found in [questions.md](questions.md)
 
-## Goals 
+# How to use
+- Fork this repository and clone your fork to work locally; ideally, work on branch off master within your own repository.
+- Regularly update your master branch by merging with the upstream repo (this one) to help avoid merge conflicts.
+- When you are ready to merge your changes, create a pull request. If there are merge conflicts, you can still make a pull request.
+- If there are conflicts, check the reviewnb link that is automatically generated as a comment to your pull request. This allows you to see diffs in notebooks more clearly than the Github diff viewer, and makes it easier to figure out how you can update your PR to resolve the conflicts.
 
-### Goal 1: Dashboard
+# Goals 
+
+## Goal 1: Dashboard
 * Target audience: the general public
 * Contents
 	1. Aggregate bail information for the year 2020: How often is it set? How many cases?  
@@ -25,7 +30,7 @@ List of questions for analysis can be found in [questions.md](questions.md)
 	* By Jan 11, 2020
 		* Finish creating dashboard
 
-### Goal 2: Report 
+## Goal 2: Report 
 * Ideally by March or April 2021
 * List of questions can be found in [questions.md](questions.md)
  
