@@ -15,7 +15,7 @@ def main():
         "Race & Gender": race_gender
     }
     st.sidebar.title('Navigation')
-    selection = st.sidebar.radio("Go to", list(PAGES.keys()))
+    selection = st.sidebar.radio("Please select a page", list(PAGES.keys()))
     page = PAGES[selection]
     page.app()
 
