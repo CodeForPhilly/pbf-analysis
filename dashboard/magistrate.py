@@ -19,7 +19,7 @@ def app():
     _, col, _ = st.beta_columns([1,2,1])
     image = Image.open('figures/magistrate_case_count.png')
     col.image(image)
-    st.write("In the year 2020, bail was set by 625 different people. We provide a summary of the bail type and bail amount for cases handled by the 9 magistrates who handled more than 300 cases in year 2020.")
+    st.write("In the year 2020, bail was set by 673 different people. We provide a summary of the bail type and bail amount for cases handled by the nine magistrates who handled more than 300 cases in year 2020.")
 
     # bail type
     st.subheader("Percentage of bail type for each magistrate")
@@ -46,21 +46,22 @@ def app():
             In particular, the differences among magistrates may stem from the fact that some magistrates may have handled more cases with more severe charges.")
             
     st.write("We compared the bail type and bail amount set by the magistrates while controlling for the difference in the charges. \
-            We conducted a matched study where we sampled cases with the same charges that were handled by five different magistrates (Bernard, Rigmaiden-DeLeon, Stack, E-Filing Judge, and O'Brien). \
-            We performed the matched study on only the five magistrates that handled more than 1000 cases in year 2020. ")
+            We selected size magistrates (Bernard, Rainey, Rigmaiden-DeLeon, Stack, E-Filing Judge, and O'Brien) that handled more than 1000 cases in year 2020. \
+            We then conducted a matched study where we sampled cases with the same charges that were handled by the six magistrates.")
             
-    st.write("The following results were obtained from the 3490 cases (698 per magistrate) that were sampled. Ideally, there shouldn't be any noticable difference across magistrates.")
-    
+    st.write("The following results were obtained from the 3186 cases (531 per magistrate) that were sampled. Ideally, there shouldn't be any noticable difference across magistrates.")
+    st.write("Note that due to the sampling nature of the matched study, the matched dataset will vary across samples. However, the general trends observed below were consistent across multiple samples.")
     # bail type
     st.subheader("Percentage of bail type for each magistrate")
     image = Image.open('figures/magistrate_matched_type.png')
     st.image(image, use_column_width=True)
-    st.write("When we control for the offense types, magistrates set monetary bail to similar number of cases.")
+    st.write("When we control for the offense types, all magistrates set monetary bail to 27%-37% of their cases.")
 
     # bail amount
     st.subheader("Monetary bail amount set by each magistrate")
     _, col, _ = st.beta_columns([1, 5, 1])
     image = Image.open('figures/magistrate_matched_amount.png')
     col.image(image, use_column_width = True)
-    st.write("Even when we control for the offense types, we see a difference in the monetary bail amount across magistrates.\
-            In particular, Bernard and Rigmaiden-DeLeon set higher bail amounts than Stack, E-filing Judge, and O'Brien.")
+    st.write("Even when we control for offense types, we see a difference in the monetary bail amount across magistrates.\
+            While the median bail amount are similar, comparing the colored boxes (which indicates the 25% - 75% range of bail amounts) show that Bernard, Rainey, and Rigmaiden-DeLeon tend to set higher bail amounts than Stack, E-filing Judge, and O'Brien.")
+           
