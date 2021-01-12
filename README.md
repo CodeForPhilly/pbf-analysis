@@ -13,6 +13,8 @@ If you are joining this project (and have joined the Code for Philly Slack works
 - Regularly update your master branch by merging with the upstream repo (this one) to help avoid merge conflicts.
 - When you are ready to merge your changes, create a pull request. If there are merge conflicts, you can still make a pull request.
 - If there are conflicts, check the reviewnb link that is automatically generated as a comment to your pull request. This allows you to see diffs in notebooks more clearly than the Github diff viewer, and makes it easier to figure out how you can update your PR to resolve the conflicts.
+## How to run
+To run the Streamlit dashboard app, navigate to the `dashboard` folder and run the command `streamlit run app.py`.
 
 # Goals 
 
