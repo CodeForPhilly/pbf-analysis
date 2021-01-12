@@ -16,7 +16,25 @@ def app():
     st.image(image, use_column_width=True)
     st.write("When monetary bail is set, White defendants were more frequently assigned a bail amount between $10,000 and $25,000, and Black defendants were more frequently assigned a bail amount between $100,000 and $500,000.")
     
-    # was bail paid?
     st.subheader("Percentage of bail paid, by race")
     image = Image.open('figures/bail_paid_race.png')
     st.image(image)
+    
+    st.markdown('*Breakdown By Bail Amount*')
+    image = Image.open('figures/bail_paid_race_1k to 5k.png')
+    st.image(image)
+    image = Image.open('figures/bail_paid_race_5k to 10k.png')
+    st.image(image)
+    image = Image.open('figures/bail_paid_race_10k to 25k.png')
+    st.image(image)
+    image = Image.open('figures/bail_paid_race_25k to 50k.png')
+    st.image(image)
+    image = Image.open('figures/bail_paid_race_50k to 100k.png')
+    st.image(image)
+    image = Image.open('figures/bail_paid_race_100k to 500k.png')
+    st.image(image)
+    image = Image.open('figures/bail_paid_race_>=500k.png')
+    st.image(image)
+    
+    st.write("Overall, 52.5% of White defendants paid bail while the percentage of Black defendants who were able to pay bail was 50.6%.")
+    st.write("However, the assigned bail amount had an impact. For bail amounts under $50K, a higher percentage of Black defendants were able to pay bail compared to White defandents. This trend reversed when the bail amount was over $50K.")
