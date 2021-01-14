@@ -14,7 +14,10 @@ def app():
     # Matched analysis
     image = Image.open('figures/race_matched_type.png')
     st.image(image, use_column_width=True)    
-    st.write("When comparing matched cases, there was no difference between bail types given to Black and White defendants.")
+    
+    image = Image.open('figures/race_matched_set.png')
+    st.image(image, use_column_width=True)    
+    st.write("When comparing matched cases, there was no difference between bail types or bail amounts set for Black and White defendants.")
     
     st.subheader("Percentage of bail amount, by race")
     image = Image.open('figures/bail_set_bin.png')
