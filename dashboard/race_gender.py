@@ -10,7 +10,12 @@ def app():
     image = Image.open('figures/bail_type_by_race_pct.png')
     st.image(image, use_column_width=True)
     st.write("Compared to White defendants, Black defendants were less frequently granted ROR bail, which has no monetary payment stipulation, and were more frequently denied bail.")
-
+    
+    # Matched analysis
+    image = Image.open('figures/race_matched_type.png')
+    st.image(image, use_column_width=True)    
+    st.write("When comparing matched cases, there was no difference between bail types given to Black and White defendants.")
+    
     st.subheader("Percentage of bail amount, by race")
     image = Image.open('figures/bail_set_bin.png')
     st.image(image, use_column_width=True)

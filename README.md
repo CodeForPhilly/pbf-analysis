@@ -15,6 +15,7 @@ If you are joining this project (and have joined the Code for Philly Slack works
 - If there are conflicts, check the reviewnb link that is automatically generated as a comment to your pull request. This allows you to see diffs in notebooks more clearly than the Github diff viewer, and makes it easier to figure out how you can update your PR to resolve the conflicts.
 ## How to run
 To run the Streamlit dashboard app, navigate to the `dashboard` folder and run the command `streamlit run app.py`.
+Note: `dashboard.ipynb` can be run all the way through from the top, but you may need up to ~16 GB of RAM. You can also run section 0 and then whichever subsection you are working on.
 
 # Goals 
 
