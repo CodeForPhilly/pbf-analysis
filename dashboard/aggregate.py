@@ -103,6 +103,10 @@ def app():
     pie3_fig.update_layout(margin={"r":0,"t":100,"l":0,"b":0}, height=250, width=250)
     col3.plotly_chart(pie3_fig)
     
+    st.write("The median bail set was $30,000, and the most frequently set bail amount was $25,000.")
+    st.write("In 48.8% of cases with monetary bail, bail has not been posted. Including these cases, the median amount of bail paid was $250. ")    
+    
+    
     
     # Moving average plot
     st.header('3. Philadelphia Bail Trends over 2020')
