@@ -25,8 +25,12 @@ def app():
     st.subheader("Percentage of bail type for each magistrate")
     image = Image.open('figures/magistrate_type_summary.png')
     st.image(image, use_column_width=True)
+
+    image = Image.open('figures/magistrate_type_summary_bar.png')
+    st.image(image)
     st.write("The above pie chart shows the percentage of bail types set by each magistrate. \
             While there isn't a huge variability across magistrates, we can see that E-filing judges set fewer monetary bail than other magistrates.")
+
 
     # bail amount
     st.subheader("Monetary bail amount set by each magistrate")
