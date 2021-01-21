@@ -49,9 +49,17 @@ def app():
     
 To control for offense types, we conducted a matched study where we sampled cases with identical lists of charges from cases with White and Black defendants. The following results were obtained from the 10593 cases (5115 for Black defendants, 5112 for White defendants) that were sampled. """
     )
-        
+
+    st.subheader("Effect of defendant race on bail")    
+    st.write("When comparing matched cases, there was no difference bail types and bail amounts set for Black and White defendants.")
     st.image(Image.open('figures/race_matched_type.png'), width=int(1.5*imgWidth))    
     st.image(Image.open('figures/race_matched_set.png'), width=imgWidth)
     st.image(Image.open('figures/race_matched_bailPosted.png'), width=imgWidth)   
-
-    st.write("When comparing matched cases, there was no difference between bail types or bail amounts set for Black and White defendants.")
+    
+    """
+    st.subheader("Example offenses")
+    st.write("For cases involving assault:")
+    st.image(Image.open('figures/race_matched_assault_type.png'), width=int(1.5*imgWidth))   
+    st.write("For cases involving drug-related offenses:")
+    st.image(Image.open('figures/race_matched_drug_type.png'), width=int(1.5*imgWidth))
+    """

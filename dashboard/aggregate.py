@@ -131,6 +131,15 @@ def app():
     pie3_fig.update_layout(margin={"r":0,"t":100,"l":0,"b":0}, height=400, width=400)
     st.plotly_chart(pie3_fig)
     
+    # TODO: fix these figures such that the same colors/order are used for each bail type
+    st.subheader('Charged offenses and bail type') 
+    st.write("For cases involving a charge of assault, monetary bail was most frequently set.")
+    st.image(Image.open('figures/aggregate_assault_bailType.png'), width=400)
+    st.write("For cases involving a drug-related charge, monetary bail and ROR were set at similar rates.")
+    st.image(Image.open('figures/aggregate_drug_bailType.png'), width=400)
+    st.write("For cases involving a charge of DUI, ROR bail was most frequently set.")
+    st.image(Image.open('figures/aggregate_dui_bailType.png'), width=400)
+    
     # ----------------------------------------------------
     # Moving average plots 
     # ----------------------------------------------------
