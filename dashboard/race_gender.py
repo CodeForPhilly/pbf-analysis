@@ -25,6 +25,9 @@ def app():
     st.image(Image.open('figures/race_aggregate_set.png'), width=imgWidth)
     
     st.subheader("Bail posted frequency")
+    st.write("Overall, slightly over half of White and Black defendants posted bail (52.5% and 50.6% respsectively). White and Black defendants posted bail at similar rates for each range of bail amounts set.")    
+    st.image(Image.open('figures/race_aggregate_bailPosted.png'), width=imgWidth)
+    """
     st.image(Image.open('figures/bail_paid_race.png'), width=imgWidth)
     st.image(Image.open('figures/bail_paid_race_1k to 5k.png'), width=imgWidth)
     st.image(Image.open('figures/bail_paid_race_5k to 10k.png'), width=imgWidth)
@@ -33,10 +36,10 @@ def app():
     st.image(Image.open('figures/bail_paid_race_50k to 100k.png'), width=imgWidth)
     st.image(Image.open('figures/bail_paid_race_100k to 500k.png'), width=imgWidth)
     st.image(Image.open('figures/bail_paid_race_>=500k.png'), width=imgWidth)
-    
     st.write("Overall, 52.5% of White defendants paid bail while the percentage of Black defendants who were able to pay bail was 50.6%.")
     st.write("However, the assigned bail amount had an impact. For bail amounts under $50K, a higher percentage of Black defendants were able to pay bail compared to White defandents. This trend reversed when the bail amount was over $50K.")
-
+    """
+    
     # ----------------------------------------
     # Matched analysis
     # ----------------------------------------
