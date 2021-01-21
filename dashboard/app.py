@@ -12,7 +12,7 @@ def main():
         "Summary" : aggregate,
         "Magistrates" : magistrate,
         "Neighborhoods" : neighborhood,
-        "Race & Gender": race_gender
+        "Race": race_gender
     }
     st.sidebar.title('Navigation')
     selection = st.sidebar.radio("Please select a page", list(PAGES.keys()))
