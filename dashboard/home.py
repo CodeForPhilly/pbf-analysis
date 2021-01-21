@@ -5,11 +5,11 @@ def app():
     st.image('figures/PBF_logo_edit.png', use_column_width = True)
 
     # What is this app
-    st.header('Bail in Philadelphia 2020.')
+    st.header('Bail in Philadelphia, 2020')
     st.write("This dashboard provides a summary of the bail situation in Philadelphia in 2020. \
-        We provide a general year-end summary, along with breakdown by neighborhood, magistrate, and race and gender.\
+        We provide a general year-end summary, along with breakdown by neighborhood, magistrate, and defendant demographics.\
         Please use the navigation panel on the left to select a page.")    
-    st.write("The 24,221 cases used in this dashboard has been gathered from [Philadelphia Municipal Court Docket Sheets.](https://ujsportal.pacourts.us/DocketSheets/MC.aspx#)")
+    st.write("Information from the **24,221 cases** used to create this dashboard was gathered from [Philadelphia Municipal Court docket sheets.](https://ujsportal.pacourts.us/DocketSheets/MC.aspx#)")
 
     # What is PBF 
     st.header('The Philadelphia Bail Fund')
