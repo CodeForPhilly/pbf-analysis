@@ -30,8 +30,8 @@ def app():
     
     # Create data assoc. w/ each metric (over all bail types) and put in dict
     case_counts = pd.DataFrame(df['zipcode_clean'].value_counts().reset_index().rename(columns={'index': 'zip', 'zipcode_clean': 'count'}))
-    bail_amounts = df.groupby('zipcode_clean').sum()[['bail_amount']]
-    bail_paid = df.groupby('zipcode_clean').sum()[['bail_paid']]
+    bail_amounts = df.groupby('zipcode_clean').sum()[['bail_amount']].reset_index()
+    bail_paid = df.groupby('zipcode_clean').sum()[['bail_paid']].reset_index()
     bail_paid_pct = df[df['bail_paid'] > 0].groupby('zipcode_clean').size().div(df['zipcode_clean'].value_counts()).mul(100).round(1).reset_index().rename(columns={'index':'zip', 0:'pct'})
     cases_dfs = {'Case Count': case_counts, 'Bail Amount': bail_amounts, 'Bail Paid': bail_paid, 'Percent of Cases where Bail Paid': bail_paid_pct}
     
