@@ -11,11 +11,16 @@ POVERTY = '''
 https://data.census.gov/cedsci/table?q=S1701&g=0400000US42_8600000US19102,19103,19104,19106,19107,19109,19111,19112,19113,19114,19115,19116,19118,19119,19120,19121,19122,19123,19124,19125,19126,19127,19128,19129,19130,19131,19132,19133,19134,19135,19136,19137,19138,19139,19140,19141,19142,19143,19144,19145,19146,19147,19148,19149,19150,19151,19152,19153,19154&tid=ACSST5Y2018.S1701&hidePreview=true
 '''
 
+UNEMPLOYMENT = '''
+https://data.census.gov/cedsci/table?q=S2301&g=0400000US42_8600000US19102,19103,19104,19106,19107,19109,19111,19112,19113,19114,19115,19116,19118,19119,19120,19121,19122,19123,19124,19125,19126,19127,19128,19129,19130,19131,19132,19133,19134,19135,19136,19137,19138,19139,19140,19141,19142,19143,19144,19145,19146,19147,19148,19149,19150,19151,19152,19153,19154&tid=ACSST5Y2018.S2301&hidePreview=true
+'''
+
 def app():
     st.title('Breakdown by Neighborhood')
-    st.write('This section provides an interactive breakdown of case counts and amounts of bail set and paid by Philadelphia zip code, in tandem with zip-code level median income and poverty level data from the American Community Survey (ACS).')
+    st.write('This section provides an interactive breakdown of case counts and amounts of bail set and paid by Philadelphia zip code, in tandem with income, poverty, and unemployment data from the American Community Survey (ACS), collected by the U.S. Census Bureau.')
+    st.write('Use the dropdown menus to select a given bail and census metric associated with each map. Zip codes with higher levels of each bail metric tend to have lower median incomes and higher poverty and unemployment rates.')
     st.markdown(f"""
-    Source Data: [Median Income]({INCOME}), [Poverty Level]({POVERTY})
+    Source Data: [Median Income]({INCOME}), [Poverty Level]({POVERTY}), [Unemployment Rate]({UNEMPLOYMENT})
         """)
     
     col1, col2 = st.beta_columns(2)
@@ -31,7 +36,7 @@ def app():
     
     # Geo data
     # Approximate Philly lat/long
-    philly = (40.00, -75.16)
+    philly = (40.0, -75.13)
 
     # Open geojson of philly zip code borders
     zips_geo = '../Zipcodes_Poly.geojson'
@@ -40,7 +45,7 @@ def app():
     
     # Interactive map for bail metrics
     # Make dropdown for bail metric
-    metric = col1.selectbox('Metric', ('Case Count', 'Bail Amount', 'Bail Paid'))
+    metric = col1.selectbox('Bail Metric', ('Case Count', 'Bail Amount', 'Bail Paid'))
     
     # Get data for the selected metric
     data = cases_dfs[metric]
@@ -54,8 +59,8 @@ def app():
                                           featureidkey="properties.CODE", # key index in geojson for zip
                                          ))
     map_fig.update_layout(mapbox_style="carto-positron",
-                   mapbox_zoom=8.5, mapbox_center = {"lat": philly[0], "lon": philly[1]})
-    map_fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, height=600, width=350)
+                   mapbox_zoom=8.8, mapbox_center = {"lat": philly[0], "lon": philly[1]})
+    map_fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, height=450, width=350)
     
     col1.plotly_chart(map_fig)
     
@@ -64,7 +69,7 @@ def app():
     acs_df = preprocess_acs()
     
     # Dropdown for ACS metrics
-    acs_metric = col2.selectbox('Census Metric', ('Households Median Income', 'Percent Below Poverty'))
+    acs_metric = col2.selectbox('Census Metric', ('Households Median Income', 'Percent Below Poverty', 'Unemployment Rate'))
     
     # Set up figure object (choropleth map) with geo data, make sure z gets the selected metric
     acs_map_fig = go.FigureWidget(go.Choroplethmapbox(geojson=zips_data, # geojson data
@@ -73,8 +78,8 @@ def app():
                                           featureidkey="properties.CODE", # key index in geojson for zip
                                          ))
     acs_map_fig.update_layout(mapbox_style="carto-positron",
-                   mapbox_zoom=8.5, mapbox_center = {"lat": philly[0], "lon": philly[1]})
-    acs_map_fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, height=600, width=350)
+                   mapbox_zoom=8.8, mapbox_center = {"lat": philly[0], "lon": philly[1]})
+    acs_map_fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, height=450, width=350)
     
     col2.plotly_chart(acs_map_fig)
     
