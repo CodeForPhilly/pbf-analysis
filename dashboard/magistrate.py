@@ -69,6 +69,9 @@ def app():
     _, col, _ = st.beta_columns([1, 5, 1])
     image = Image.open('figures/magistrate_matched_amount.png')
     col.image(image, use_column_width = True)
+    _, col, _ = st.beta_columns([1, 10, 1])
+    image = Image.open('figures/magistrate_matched_amount_countplot.png')
+    col.image(image, use_column_width = True)
     st.write("Even when we control for offense types, we see a difference in the monetary bail amount across magistrates.\
             While the median bail amount are similar, comparing the colored boxes (which indicates the 25% - 75% range of bail amounts) show that Bernard, Rainey, and Rigmaiden-DeLeon tend to set higher bail amounts than Stack, E-filing Judge, and O'Brien.")
            
