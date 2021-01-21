@@ -29,10 +29,11 @@ def app():
     df = preprocess()
     
     # Create data assoc. w/ each metric (over all bail types) and put in dict
-    case_counts = pd.DataFrame(df['zip'].value_counts().reset_index().rename(columns={'index': 'zip', 'zip': 'count'}))
-    bail_amounts = df.groupby('zip').sum()[['bail_amount']].reset_index()
-    bail_paid = df.groupby('zip').sum()[['bail_paid']].reset_index()
-    cases_dfs = {'Case Count': case_counts, 'Bail Amount': bail_amounts, 'Bail Paid': bail_paid}
+    case_counts = pd.DataFrame(df['zipcode_clean'].value_counts().reset_index().rename(columns={'index': 'zip', 'zipcode_clean': 'count'}))
+    bail_amounts = df.groupby('zipcode_clean').sum()[['bail_amount']]
+    bail_paid = df.groupby('zipcode_clean').sum()[['bail_paid']]
+    bail_paid_pct = df[df['bail_paid'] > 0].groupby('zipcode_clean').size().div(df['zipcode_clean'].value_counts()).mul(100).round(1).reset_index().rename(columns={'index':'zip', 0:'pct'})
+    cases_dfs = {'Case Count': case_counts, 'Bail Amount': bail_amounts, 'Bail Paid': bail_paid, 'Percent of Cases where Bail Paid': bail_paid_pct}
     
     # Geo data
     # Approximate Philly lat/long
@@ -45,7 +46,7 @@ def app():
     
     # Interactive map for bail metrics
     # Make dropdown for bail metric
-    metric = col1.selectbox('Bail Metric', ('Case Count', 'Bail Amount', 'Bail Paid'))
+    metric = col1.selectbox('Bail Metric', ('Case Count', 'Bail Amount', 'Bail Paid', 'Percent of Cases where Bail Paid'))
     
     # Get data for the selected metric
     data = cases_dfs[metric]
@@ -57,6 +58,7 @@ def app():
                                           z=z, # what colors will rep. in map from our data
                                           locations=locations, # zip codes in our data
                                           featureidkey="properties.CODE", # key index in geojson for zip
+                                          colorscale='YlOrRd'
                                          ))
     map_fig.update_layout(mapbox_style="carto-positron",
                    mapbox_zoom=8.8, mapbox_center = {"lat": philly[0], "lon": philly[1]})
@@ -76,6 +78,7 @@ def app():
                                           z=acs_df['_'.join([w.lower() for w in acs_metric.split(' ')])], # what colors will rep. in map from our data
                                           locations=acs_df['zipcode'], # zip codes in our data
                                           featureidkey="properties.CODE", # key index in geojson for zip
+                                          colorscale='YlOrRd'
                                          ))
     acs_map_fig.update_layout(mapbox_style="carto-positron",
                    mapbox_zoom=8.8, mapbox_center = {"lat": philly[0], "lon": philly[1]})
