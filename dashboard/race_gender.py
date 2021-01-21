@@ -51,6 +51,7 @@ To control for offense types, we conducted a matched study where we sampled case
     )
         
     st.image(Image.open('figures/race_matched_type.png'), width=int(1.5*imgWidth))    
-    st.image(Image.open('figures/race_matched_set.png'), width=imgWidth)    
+    st.image(Image.open('figures/race_matched_set.png'), width=imgWidth)
+    st.image(Image.open('figures/race_matched_bailPosted.png'), width=imgWidth)   
 
     st.write("When comparing matched cases, there was no difference between bail types or bail amounts set for Black and White defendants.")
