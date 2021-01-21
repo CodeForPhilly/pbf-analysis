@@ -114,6 +114,9 @@ def preprocess_acs():
     
     poverty_df = pd.read_csv('../data/poverty/cleaned_poverty.csv')
     poverty_df = poverty_df[['zipcode', 'percent_below_poverty']]
+
+    poverty_df = pd.read_csv('../data/unemployment/cleaned_unemployment.csv')
+    poverty_df = poverty_df[['zipcode', 'unemployment_rate']]    
     
     acs_df = income_df.merge(poverty_df, on='zipcode', how='outer')
     acs_df = acs_df.replace('-', np.nan)
