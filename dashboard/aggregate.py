@@ -9,7 +9,7 @@ from preprocess import preprocess
 
 # st.set_page_config(layout="wide")
 def app():
-    st.title('Aggregate Information')
+    st.title('Year-end Summary')
     st.write('This section provides a general year-end summary of bail in Philadelphia in 2020, including trends and aggregate-level information for case counts, bail types, and monetary bail set and posted.')
     
     # Get bail data
@@ -18,15 +18,16 @@ def app():
     # ----------------------------------------------------
     # Summary numbers 
     # ----------------------------------------------------
-    st.header('Year-end Summary')
+    #st.header('Year-end Summary')
     
     # Get range of dates and create slider to select date range (workaround since Streamlit doesn't have a date range slider)
     df['bail_date'] = df['bail_date'].map(datetime.datetime.date)
     all_dates = sorted(df['bail_date'].unique())
     start_date = df['bail_date'].min()
     end_date = df['bail_date'].max()
-    date_range = st.slider('Dates', 1, (end_date-start_date).days + 1, (1,(end_date-start_date).days + 1),  1)
-    st.write(all_dates[date_range[0]-1].strftime('%b %d %Y'), '-', all_dates[date_range[1]-1].strftime('%b %d %Y'))
+    # Slider
+    date_range = st.slider('Date Range', 1, (end_date-start_date).days + 1, (1,(end_date-start_date).days + 1),  1)
+    st.write(all_dates[date_range[0]-1].strftime('%b %d, %Y'), '-', all_dates[date_range[1]-1].strftime('%b %d, %Y'))  
     
     # Get data based on selected date range
     df = df[(df['bail_date'] >= all_dates[date_range[0]-1])&(df['bail_date'] <= all_dates[date_range[1]-1])]
@@ -80,7 +81,7 @@ def app():
     # ----------------------------------------------------
     # Summary charts 
     # ----------------------------------------------------
-    st.header('Bail type and monetary bail summary')
+    #st.header('Bail type and monetary bail summary')
 
     st.subheader('Bail type')
     st.write("""During a defendant's arraignment (a hearing held shortly after they are arrested), one of several [types of bail](https://www.pacodeandbulletin.gov/Display/pacode?file=/secure/pacode/data/234/chapter5/s524.html) may be set:
@@ -99,15 +100,15 @@ def app():
     st.plotly_chart(pie1_fig)    
     #st.image(Image.open('figures/aggregate_bailType.png'), width=400)
     
-    st.write("The most frequently set bail type in 2020 was monetary bail. Together, nominal and nonmonetary bail were set in under 2% of cases.")
+    st.write("The most frequently set bail type in 2020 was monetary bail. Together, nominal or nonmonetary bail were set in under 1% of cases.")
     
     st.subheader('Monetary bail set')
-    st.write("When monetary bail is set, a defendant is held in jail until a portion (typically 10%) of the bail amount is paid (\"posted\"). For cases where monetary bail is was set, the most frequently set bail amount was $25,000.") 
+    st.write("For cases where monetary bail is was set, the median bail set was $30,000, and the most frequently set bail amount was $25,000. However, a bail amount of at least $100,000 was set in more than 25% of cases.") 
     st.image(Image.open('figures/aggregate_bailSet.png'), width=400)      
-    st.write("Note that the bail amount bins in this chart are increasing roughly by order-of-magnitude, rather than evenly divided.")
+    #st.write("Note that the bail amount bins in this chart are increasing roughly by order-of-magnitude, rather than evenly divided.")
     
     st.subheader('Monetary bail posted')
-    st.write("In nearly half (49%) of cases where monetary bail was set, bail was not posted, meaning that the defendant was not released from jail. When bail was posted, the most frequently paid amount was $2,500. Bail set at more than $100,000 was posted in less than 25% of cases; however, bail set below $1000 was posted in only about 15% of cases.")    
+    st.write("In nearly half (49%) of cases where monetary bail was set, bail was not posted, meaning that the defendant was not released from jail. When bail was posted, the median and most frequently paid amount was $2,500 (corresponding to 10% of bail set at $25,000). Out of the cases where bail was at least $100,000, less than a quarter of defendants posted bail. Though infrequently set, bail amounts below $1000 were also infrequently posted.")
     st.image(Image.open('figures/aggregate_bailPosted.png'), width=400)          
 
     """
@@ -133,7 +134,8 @@ def app():
     # ----------------------------------------------------
     # Moving average plots 
     # ----------------------------------------------------
-    st.header('Bail trends over the year')
+    st.subheader('Bail trends over the year')
+    st.write("Use the dropdown menu to view trends in the average bail amount set, number of monetary bail cases, and frequency of monetary bail set. Use the slider to change the number of days over which the moving average is calculated.")    
     # Make data for each metric + data to initialize the chart
     ma_dfs = {'Bail Amount': df.groupby('bail_date').mean()['bail_amount'], 
               'Monetary Bail Cases': df_monetary.groupby('bail_date').size(),
@@ -144,7 +146,7 @@ def app():
     metric = st.selectbox('Metric', ('Bail Amount', 'Monetary Bail Cases', 'Monetary Bail Frequency'))
     
     # Slider for window size
-    window = st.slider('Window Size', 1, 60, 5, 1)
+    window = st.slider('Window Size (days)', 1, 60, 5, 1)
     
     # Initialize figure
     ma_fig = go.FigureWidget()
