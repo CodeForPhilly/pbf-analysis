@@ -9,9 +9,9 @@ import race_gender
 def main():
     PAGES = {
         "Home": home,
-        "Aggregate" : aggregate,
-        "Magistrate" : magistrate,
-        "Neighborhood" : neighborhood,
+        "Summary" : aggregate,
+        "Magistrates" : magistrate,
+        "Neighborhoods" : neighborhood,
         "Race & Gender": race_gender
     }
     st.sidebar.title('Navigation')

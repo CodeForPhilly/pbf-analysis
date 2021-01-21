@@ -3,19 +3,22 @@ import pandas as pd
 import datetime
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
+from PIL import Image
 from preprocess import preprocess
 
 
 # st.set_page_config(layout="wide")
 def app():
     st.title('Aggregate Information')
-    st.write('This section provides a general year-end summary of bail in Philadelphia in 2020, including trends and aggregate-level information for cases and bail amounts and types.')
+    st.write('This section provides a general year-end summary of bail in Philadelphia in 2020, including trends and aggregate-level information for case counts, bail types, and monetary bail set and posted.')
     
     # Get bail data
     df = preprocess()
     
-    # Aggregate Summary
-    st.header('1. Year-end Aggregate Summary')
+    # ----------------------------------------------------
+    # Summary numbers 
+    # ----------------------------------------------------
+    st.header('Year-end Summary')
     
     # Get range of dates and create slider to select date range (workaround since Streamlit doesn't have a date range slider)
     df['bail_date'] = df['bail_date'].map(datetime.datetime.date)
@@ -74,42 +77,63 @@ def app():
     
     st.plotly_chart(card_fig)
     
-    # Pie charts for Breakdown by Bail Type/Set/By Atty Type
-    st.header('2. Summary of Cases by Bail Type, Bail Set, and Attorney Type')
-    # Create subplots: use 'domain' type for Pie subplot
-    col1, col2, col3 = st.beta_columns([2,2,2])
+    # ----------------------------------------------------
+    # Summary charts 
+    # ----------------------------------------------------
+    st.header('Bail type and monetary bail summary')
+
+    st.subheader('Bail type')
+    st.write("""During a defendant's arraignment (a hearing held shortly after they are arrested), one of several [types of bail](https://www.pacodeandbulletin.gov/Display/pacode?file=/secure/pacode/data/234/chapter5/s524.html) may be set:
+- **monetary**, where a bail amount is set and the defendant is held in jail until a portion (typically 10%) is paid (\"posted\"),
+- **unsecured**, where the defendant is liable for a set bail amount if they do not show up to future court proceedings,
+- **ROR** (“released on own recognizance”), where a defendant must agree to show up to all future court proceedings,
+- other **nonmonetary** or **nominal** bail conditions, or
+- the defendant may be **denied** bail.""")
     
     # By Bail Type
     pie1_fig = go.FigureWidget()
     pie1_fig.add_trace(go.Pie(labels=df_bail.index.tolist(), values=df_bail.values.tolist()))
     pie1_fig.update_traces(hole=.4, hoverinfo="label+percent+value")
-    pie1_fig.update_layout(showlegend=False, title_text='Bail Type', title_x=0.45)
-    pie1_fig.update_layout(margin={"r":0,"t":100,"l":0,"b":0}, height=250, width=250)
-    col1.plotly_chart(pie1_fig)
+    pie1_fig.update_layout(showlegend=True, title_text='Bail Type', title_x=0.45)
+    pie1_fig.update_layout(margin={"r":0,"t":100,"l":0,"b":0}, height=400, width=400)
+    st.plotly_chart(pie1_fig)    
+    #st.image(Image.open('figures/aggregate_bailType.png'), width=400)
     
+    st.write("The most frequently set bail type in 2020 was monetary bail. Together, nominal and nonmonetary bail were set in under 2% of cases.")
+    
+    st.subheader('Monetary bail set')
+    st.write("When monetary bail is set, a defendant is held in jail until a portion (typically 10%) of the bail amount is paid (\"posted\"). For cases where monetary bail is was set, the most frequently set bail amount was $25,000.") 
+    st.image(Image.open('figures/aggregate_bailSet.png'), width=400)      
+    st.write("Note that the bail amount bins in this chart are increasing roughly by order-of-magnitude, rather than evenly divided.")
+    
+    st.subheader('Monetary bail posted')
+    st.write("In nearly half (49%) of cases where monetary bail was set, bail was not posted, meaning that the defendant was not released from jail. When bail was posted, the most frequently paid amount was $2,500. Bail set at more than $100,000 was posted in less than 25% of cases; however, bail set below $1000 was posted in only about 15% of cases.")    
+    st.image(Image.open('figures/aggregate_bailPosted.png'), width=400)          
+
+    """
     # By Bail Set
     pie2_fig = go.FigureWidget()
     pie2_fig.add_trace(go.Pie(labels=series_monetary.index.tolist(), values=series_monetary.values.tolist()))
     pie2_fig.update_traces(hole=.4, hoverinfo="label+percent+value")
-    pie2_fig.update_layout(showlegend=False, title_text='Bail Set', title_x=0.45)
-    pie2_fig.update_layout(margin={"r":0,"t":100,"l":0,"b":0}, height=250, width=250)
-    col2.plotly_chart(pie2_fig)
-    
+    pie2_fig.update_layout(showlegend=True, title_text='Bail Set', title_x=0.45)
+    pie2_fig.update_layout(margin={"r":0,"t":100,"l":0,"b":0}, height=400, width=40)
+    st.plotly_chart(pie2_fig)
+    """
+
+    st.subheader('Attorney types')
     # By Atty Type
+    st.write("Public defendants were assigned in more than two thirds of cases.")    
     pie3_fig = go.FigureWidget()
     pie3_fig.add_trace(go.Pie(labels=df_defender.index.tolist(), values=df_defender.values.tolist()))
     pie3_fig.update_traces(hole=.4, hoverinfo="label+percent+value")
-    pie3_fig.update_layout(showlegend=False, title_text='Attorney Type', title_x=0.45)
-    pie3_fig.update_layout(margin={"r":0,"t":100,"l":0,"b":0}, height=250, width=250)
-    col3.plotly_chart(pie3_fig)
+    pie3_fig.update_layout(showlegend=True, title_text='Attorney Type', title_x=0.45)
+    pie3_fig.update_layout(margin={"r":0,"t":100,"l":0,"b":0}, height=400, width=400)
+    st.plotly_chart(pie3_fig)
     
-    st.write("The median bail set was $30,000, and the most frequently set bail amount was $25,000.")
-    st.write("In 48.8% of cases with monetary bail, bail has not been posted. Including these cases, the median amount of bail paid was $250. ")    
-    
-    
-    
-    # Moving average plot
-    st.header('3. Philadelphia Bail Trends over 2020')
+    # ----------------------------------------------------
+    # Moving average plots 
+    # ----------------------------------------------------
+    st.header('Bail trends over the year')
     # Make data for each metric + data to initialize the chart
     ma_dfs = {'Bail Amount': df.groupby('bail_date').mean()['bail_amount'], 
               'Monetary Bail Cases': df_monetary.groupby('bail_date').size(),
