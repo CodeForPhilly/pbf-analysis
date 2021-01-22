@@ -144,12 +144,11 @@ def app():
 
     # TODO: fix these figures such that the same colors/order are used for each bail type
     st.subheader('Charged offenses and bail type') 
-    st.write("For cases involving a charge of assault, monetary bail was most frequently set.")
-    st.image(Image.open('figures/aggregate_assault_bailType.png'), width=400)
-    st.write("For cases involving a drug-related charge, monetary bail and ROR were set at similar rates.")
-    st.image(Image.open('figures/aggregate_drug_bailType.png'), width=400)
-    st.write("For cases involving a charge of DUI, ROR bail was most frequently set.")
-    st.image(Image.open('figures/aggregate_dui_bailType.png'), width=400)    
+    st.write("The frequency of bail types set was dependent on the types of charges associated with each case.\
+    For cases involving a charge of assault, monetary bail was most frequently set.\
+    For cases involving a drug-related charge, monetary bail and ROR were set at similar rates.\
+    For cases involving a charge of DUI, ROR bail was most frequently set.")
+    st.image(Image.open('figures/aggregate_bailType_byOffense.png'), use_column_width=True)
     
     # ----------------------------------------------------
     # Moving average plots 
