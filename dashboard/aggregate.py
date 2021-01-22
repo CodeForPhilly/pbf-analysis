@@ -114,13 +114,17 @@ def app():
     st.write("The most frequently set bail type in 2020 was monetary bail. Together, nominal or nonmonetary bail were set in under 1% of cases.")
     
     st.subheader('Monetary bail set')
-    st.write("For cases where monetary bail is was set, the median bail set was $30,000, and the most frequently set bail amount was $25,000. However, a bail amount of at least $100,000 was set in more than 25% of cases.") 
-    st.image(Image.open('figures/aggregate_bailSet.png'), width=400)      
-    #st.write("Note that the bail amount bins in this chart are increasing roughly by order-of-magnitude, rather than evenly divided.")
+    st.write("For cases where monetary bail is was set, the median bail set was $30,000. A bail amount of less than $10,000 was set in around 15 percent of cases, and a bail amount of at least $100,000 was set in more than 25 percent of cases.") 
+    st.image(Image.open('figures/aggregate_bailSetBin.png'), width=400)
+    st.write("While the maximum bail set was $5M, bail of at least $500k was set in only 5 percent of cases. Of the specific values of bail that were set below $500k, the most frequently set bail amount was $25,000.")
+    st.image(Image.open('figures/aggregate_bailSet500k.png'), width=400) 
     
     st.subheader('Monetary bail posted')
-    st.write("In nearly half (49%) of cases where monetary bail was set, bail was not posted, meaning that the defendant was not released from jail. When bail was posted, the median and most frequently paid amount was $2,500 (corresponding to 10% of bail set at $25,000). Out of the cases where bail was at least $100,000, less than a quarter of defendants posted bail. Though infrequently set, bail amounts below $1000 were also infrequently posted.")
-    st.image(Image.open('figures/aggregate_bailPosted.png'), width=400)          
+    st.write("In nearly half (49%) of cases where monetary bail was set, bail was not posted, meaning that the defendant was not released from jail. Out of the cases where bail was at least $100,000, less than a quarter of defendants posted bail. Though infrequently set, bail amounts below $1000 were also infrequently posted.")
+    st.write("**<font color='red'>Question for PBF</font>**: do these observations (in particular, low payments of bail set below $1000) match your experience?", unsafe_allow_html=True), 
+    st.image(Image.open('figures/aggregate_bailPostedBin.png'), width=400)
+    st.write("When bail was posted, the median and most frequently paid amount was $2,500 (corresponding to 10% of bail set at $25,000). ")
+    st.image(Image.open('figures/aggregate_bailPosted.png'), width=400)    
 
     """
     # By Bail Set
@@ -134,7 +138,7 @@ def app():
 
     st.subheader('Attorney types')
     # By Atty Type
-    st.write("Public defendants were assigned in more than two thirds of cases.")    
+    st.write("Public defenders, representing defendants who cannot afford to hire a lawyer, were appointed in more than two thirds of cases.")    
     pie3_fig = go.FigureWidget()
     pie3_fig.add_trace(go.Pie(labels=df_defender.index.tolist(), values=df_defender.values.tolist()))
     pie3_fig.update_traces(hole=.4, hoverinfo="label+percent+value")
@@ -148,13 +152,17 @@ def app():
     For cases involving a charge of assault, monetary bail was most frequently set.\
     For cases involving a drug-related charge, monetary bail and ROR were set at similar rates.\
     For cases involving a charge of DUI, ROR bail was most frequently set.")
+    st.write("**<font color='red'>Question for PBF</font>**: are there any specific charges you'd be interested in knowing this (or bail amounts/bail posted) for?", unsafe_allow_html=True), 
     st.image(Image.open('figures/aggregate_bailType_byOffense.png'), use_column_width=True)
     
     # ----------------------------------------------------
     # Moving average plots 
     # ----------------------------------------------------
     st.subheader('Bail trends over the year')
-    st.write("Use the dropdown menu to view trends in the average bail amount set, number of monetary bail cases, and frequency of monetary bail set. Use the slider to change the number of days over which the moving average is calculated.")    
+    st.write("Use the dropdown menu to view trends in the average bail amount set, number of monetary bail cases, and frequency of monetary bail set. Use the slider to change the number of days over which the moving average is calculated.")
+    st.write("Mean bail amount trended upward over the course of the year. \
+    Monetary bail case counts dropped in March, following a decrease in total arrests as a COVID-19 mitigation measure, but returned to pre-pandemic levels by October.\
+    Monetary bail frequency held steady for much of the year, with an upward trend starting in September.")   
     # Make data for each metric + data to initialize the chart
     ma_dfs = {'Bail Amount': df.groupby('bail_date').mean()['bail_amount'], 
               'Monetary Bail Cases': df[df['bail_type'] == 'Monetary'].groupby('bail_date').size(),
