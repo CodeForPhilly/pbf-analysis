@@ -6,6 +6,12 @@ from plotly.subplots import make_subplots
 from PIL import Image
 from preprocess import preprocess
 
+@st.cache(allow_output_mutation = True)
+def load_data():
+    df = pd.read_csv('data.csv')
+    df["bail_date"] = pd.to_datetime(df["bail_date"])
+    return df
+
 
 # st.set_page_config(layout="wide")
 def app():
@@ -13,15 +19,20 @@ def app():
     st.write('This section provides a general year-end summary of bail in Philadelphia in 2020, including trends and aggregate-level information for case counts, bail types, and monetary bail set and posted.')
     
     # Get bail data
-    df = preprocess()
-    
+    #df = preprocess()
+    df = load_data()
+
     # ----------------------------------------------------
     # Summary numbers 
     # ----------------------------------------------------
     #st.header('Year-end Summary')
     
     # Get range of dates and create slider to select date range (workaround since Streamlit doesn't have a date range slider)
-    df['bail_date'] = df['bail_date'].map(datetime.datetime.date)
+    # Try.. except block is another workzround. Streamlit caching doesn't work with datetime module
+    try:
+        df['bail_date'] = df['bail_date'].map(datetime.datetime.date)
+    except:
+        pass
     all_dates = sorted(df['bail_date'].unique())
     start_date = df['bail_date'].min()
     end_date = df['bail_date'].max()
@@ -30,23 +41,23 @@ def app():
     st.write(all_dates[date_range[0]-1].strftime('%b %d, %Y'), '-', all_dates[date_range[1]-1].strftime('%b %d, %Y'))  
     
     # Get data based on selected date range
-    df = df[(df['bail_date'] >= all_dates[date_range[0]-1])&(df['bail_date'] <= all_dates[date_range[1]-1])]
-    df_bail = df['bail_type'].value_counts()
-    df_monetary = df[df['bail_type'] == "Monetary"]
+    df_selected = df[(df['bail_date'] >= all_dates[date_range[0]-1])&(df['bail_date'] <= all_dates[date_range[1]-1])]
+    df_bail = df_selected['bail_type'].value_counts()
+    df_monetary = df_selected[df_selected['bail_type'] == "Monetary"]
     series_monetary = df_monetary['bail_set_bin'].value_counts()
-    df_defender = df['attorney_type'].value_counts()
+    df_defender = df_selected['attorney_type'].value_counts()
     
     # Card for Case Count
     cases = go.Indicator(
         mode = 'number',
-        value = len(df),
+        value = len(df_selected),
         domain = {'row': 0, 'column': 0 }, 
         title = {'text': 'Total Cases'})
 
     # Card for Monetary Bail Frequency
     frequency = go.Indicator(
         mode = 'number',
-        value = len(df[df['bail_type'] == 'Monetary']) / len(df[df['bail_type'].notnull()]) * 100.,
+        value = len(df_selected[df_selected['bail_type'] == 'Monetary']) / len(df_selected[df_selected['bail_type'].notnull()]) * 100.,
         number = {'suffix': '%'},
         domain = {'row': 0, 'column': 1 }, 
         title = {'text': 'Monetary Bail Frequency'})
@@ -54,7 +65,7 @@ def app():
     # Card for Total Bail Amt
     amount = go.Indicator(
         mode = 'number',
-        value = df[df['bail_type'] == 'Monetary']['bail_amount'].sum(),
+        value = df_selected[df_selected['bail_type'] == 'Monetary']['bail_amount'].sum(),
         number = {'prefix': '$'},
         domain = {'row': 1, 'column': 0 }, 
         title = {'text': 'Total Bail Set'})
@@ -62,7 +73,7 @@ def app():
     # Card for Total Bail Paid
     paid = go.Indicator(
         mode = 'number',
-        value = df[df['bail_type'] == 'Monetary']['bail_paid'].sum(),
+        value = df_selected[df_selected['bail_type'] == 'Monetary']['bail_paid'].sum(),
         number = {'prefix': '$'},
         domain = {'row': 1, 'column': 1 }, 
         title = {'text': 'Total Bail Paid'})
@@ -147,7 +158,7 @@ def app():
     st.write("Use the dropdown menu to view trends in the average bail amount set, number of monetary bail cases, and frequency of monetary bail set. Use the slider to change the number of days over which the moving average is calculated.")    
     # Make data for each metric + data to initialize the chart
     ma_dfs = {'Bail Amount': df.groupby('bail_date').mean()['bail_amount'], 
-              'Monetary Bail Cases': df_monetary.groupby('bail_date').size(),
+              'Monetary Bail Cases': df[df['bail_type'] == 'Monetary'].groupby('bail_date').size(),
              'Monetary Bail Frequency': df[df['bail_type'].notnull()].groupby('bail_date').size()
              }
     
