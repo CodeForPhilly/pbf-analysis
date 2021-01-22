@@ -103,7 +103,7 @@ def app():
     st.write("The most frequently set bail type in 2020 was monetary bail. Together, nominal or nonmonetary bail were set in under 1% of cases.")
     
     st.subheader('Monetary bail set')
-    st.write("For cases where monetary bail is was set, the median bail set was $30,000, and the most frequently set bail amount was $25,000. However, a bail amount of at least $100,000 was set in more than 25% of cases.") 
+    st.write("For cases where monetary bail was set, the median bail set was $30,000, and the most frequently set bail amount was $25,000. However, a bail amount of at least $100,000 was set in more than 25% of cases.") 
     st.image(Image.open('figures/aggregate_bailSet.png'), width=400)      
     #st.write("Note that the bail amount bins in this chart are increasing roughly by order-of-magnitude, rather than evenly divided.")
     
@@ -133,12 +133,11 @@ def app():
 
     # TODO: fix these figures such that the same colors/order are used for each bail type
     st.subheader('Charged offenses and bail type') 
-    st.write("For cases involving a charge of assault, monetary bail was most frequently set.")
-    st.image(Image.open('figures/aggregate_assault_bailType.png'), width=400)
-    st.write("For cases involving a drug-related charge, monetary bail and ROR were set at similar rates.")
-    st.image(Image.open('figures/aggregate_drug_bailType.png'), width=400)
-    st.write("For cases involving a charge of DUI, ROR bail was most frequently set.")
-    st.image(Image.open('figures/aggregate_dui_bailType.png'), width=400)    
+    st.write("The frequency of bail types set was dependent on the types of charges associated with each case.\
+    For cases involving a charge of assault, monetary bail was most frequently set.\
+    For cases involving a drug-related charge, monetary bail and ROR were set at similar rates.\
+    For cases involving a charge of DUI, ROR bail was most frequently set.")
+    st.image(Image.open('figures/aggregate_bailType_byOffense.png'), use_column_width=True)    
     
     # ----------------------------------------------------
     # Moving average plots 
@@ -148,8 +147,8 @@ def app():
     # Make data for each metric + data to initialize the chart
     ma_dfs = {'Bail Amount': df.groupby('bail_date').mean()['bail_amount'], 
               'Monetary Bail Cases': df_monetary.groupby('bail_date').size(),
-             'Monetary Bail Frequency': df[df['bail_type'].notnull()].groupby('bail_date').size()
-             }
+              'Monetary Bail Frequency': df[df['bail_type'].notnull()].groupby('bail_date').size()
+              }
     
     # Dropdown for metric
     metric = st.selectbox('Metric', ('Bail Amount', 'Monetary Bail Cases', 'Monetary Bail Frequency'))
