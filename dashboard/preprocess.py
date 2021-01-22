@@ -8,8 +8,10 @@ import regex as re
 import json
 import copy
 import math
+import streamlit as st
 
 # load and preprocess docket/court summary data
+#@st.cache
 def preprocess():
     # Import and join docket and court summary csv files
     docketdf = pd.read_csv("../docket.csv", index_col=0)
@@ -28,25 +30,25 @@ def preprocess():
     # convert string to datetime
     df["offense_date"] = pd.to_datetime(df["offense_date"])
     df["arrest_dt"] = pd.to_datetime(df["arrest_dt"])
-    df["dob"] = pd.to_datetime(df["dob"])
+    #df["dob"] = pd.to_datetime(df["dob"])
     df["bail_date"] = pd.to_datetime(df["bail_date"])
-    df["prelim_hearing_dt"] = df["prelim_hearing_dt"].apply(
-        lambda x: str(x).split(' ')[0] if pd.notnull(x) else x) # This is here because of a parsing issue
-    df["prelim_hearing_dt"] = pd.to_datetime(df["prelim_hearing_dt"])
+    #df["prelim_hearing_dt"] = df["prelim_hearing_dt"].apply(
+    #    lambda x: str(x).split(' ')[0] if pd.notnull(x) else x) # This is here because of a parsing issue
+    #df["prelim_hearing_dt"] = pd.to_datetime(df["prelim_hearing_dt"])
     df["prelim_hearing_time"] = pd.to_datetime(df["prelim_hearing_time"])
 
     # age column
-    df['age'] = df['arrest_dt'] - df['dob']
-    df['age'] = df['age'].apply(lambda x: np.floor(x.days/365.2425))
+    #df['age'] = df['arrest_dt'] - df['dob']
+    #df['age'] = df['age'].apply(lambda x: np.floor(x.days/365.2425))
 
     # public defender column: 1 if public defender, 0 if private defender
     # note that there is also an "attorney_type" column, with "Public", "Private", and "Court Appointed" options
     df["public_defender"] = df["attorney"].apply(lambda x: 1 if x =='Defender Association of  Philadelphia' else 0)
 
     # convert string representation of list to list
-    df["offenses"] = df["offenses"].apply(lambda x: ast.literal_eval(x))
-    df['offense_type'] = df['offense_type'].apply(lambda x: ast.literal_eval(x))
-    df['statute'] = df['statute'].apply(lambda x: ast.literal_eval(x))
+    #df["offenses"] = df["offenses"].apply(lambda x: ast.literal_eval(x))
+    #df['offense_type'] = df['offense_type'].apply(lambda x: ast.literal_eval(x))
+    #df['statute'] = df['statute'].apply(lambda x: ast.literal_eval(x))
 
     # zipcode: remove everything after hyphen
     df["zipcode_clean"] = df["zip"].apply(lambda x: re.sub('-.*$','',x) if type(x) == str else x)
@@ -63,11 +65,13 @@ def preprocess():
     df['bail_set_bin'] = df['bail_amount'].apply(lambda x: bin_bailSet(x))
     
     # column for bail amount bins
-    df['age_group'] = df['age'].apply(lambda x: bin_age(x))
+    #df['age_group'] = df['age'].apply(lambda x: bin_age(x))
     
+    # drop unnecessary columns
     return df
 
 # Define bins for bail amount
+#@st.cache()
 def bin_bailSet(bailSet):
     if bailSet == 0 or pd.isnull(bailSet):
         return 'None'
@@ -89,6 +93,7 @@ def bin_bailSet(bailSet):
         return '>=500k'
 
 # Define bins for bail amount
+#@st.cache()
 def bin_age(age):
     if age < 18:
         return 'minor'
@@ -108,6 +113,7 @@ def bin_age(age):
         return 'senior'
 
 # load/preprocess ACS poverty/income data
+#@st.cache()
 def preprocess_acs():
     income_df = pd.read_csv('../data/income/cleaned_income.csv')
     income_df = income_df[['zipcode', 'households_median_income']]
