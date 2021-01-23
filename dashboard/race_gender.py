@@ -18,7 +18,7 @@ def app():
     Note: the Philadelphia Bail Fund has observed that the Philadelphia court system appears to record most non-Black and non-Asian people, such as Latinx and Indigenous people, as White.\
     Thus, while the label \"White\" is maintained in the charts, this group is referred to as \"non-Black\" in the text.")
     st.write("**<font color='red'>Question for PBF</font>**: what disclaimer language would you like to include here? The above was informed by the language in the July 2020 report.", unsafe_allow_html=True)
-    st.write("Given the low freqency of nonmonetary and nominal bail (<1% of all cases), cases where these bail types were set are excluded from consideration in this section, for ease of interpretation.")
+    st.write("Given the low frequency of nonmonetary and nominal bail (<1% of all cases), cases where these bail types were set are excluded from consideration in this section, for ease of interpretation.")
     
     st.subheader("Bail type frequency")
     st.write("Relative to non-Black defendants, Black defendants had monetary bail set more frequently, ROR bail set less frequently, and were more frequently denied bail.")
