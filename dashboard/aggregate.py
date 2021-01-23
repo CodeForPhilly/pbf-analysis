@@ -123,7 +123,7 @@ def app():
     
     st.subheader('Monetary bail posted')
     st.write("In nearly half (49%) of cases where monetary bail was set, bail was not posted, meaning that the defendant was not released from jail. Out of the cases where bail was at least $100,000, less than a quarter of defendants posted bail. Though infrequently set, bail amounts below $1000 were also infrequently posted.")
-    st.write("**<font color='red'>Question for PBF</font>**: do these observations (in particular, low payments of bail set below $1000) match your experience?", unsafe_allow_html=True), 
+    st.write("**<font color='red'>Question for PBF</font>**: do these observations (in particular, low payments of bail set below $1000) match your experience?", unsafe_allow_html=True)
     st.image(Image.open('figures/aggregate_bailPostedBin.png'), width=400)
     st.write("When bail was posted, the median and most frequently paid amount was $2,500 (corresponding to 10% of bail set at $25,000). ")
     st.image(Image.open('figures/aggregate_bailPosted.png'), width=400)    
@@ -161,7 +161,7 @@ def app():
     # Moving average plots 
     # ----------------------------------------------------
     st.subheader('Bail trends over the year')
-    st.write("Use the dropdown menu to view trends in the average bail amount set, number of monetary bail cases, and frequency of monetary bail set. Use the slider to change the number of days over which the moving average is calculated.")
+    st.write("Use the dropdown menu to view trends in the mean of different bail metrics. Use the slider to change the number of days over which the moving average is calculated.")
     st.write("Mean bail amount trended slightly upward over the course of the year. \
     Monetary bail case counts dropped in March, following a decrease in total arrests as a COVID-19 mitigation measure, but returned to pre-pandemic levels by October.\
     Monetary bail frequency held steady for much of the year, with a slight upward trend starting in September.")   
