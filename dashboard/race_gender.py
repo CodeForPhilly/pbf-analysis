@@ -14,18 +14,22 @@ def app():
     st.header("Year-end Summary")
 
     st.image(Image.open('figures/race_aggregate_frequency.png'), width=500)      
-    st.write("In the following analysis, we consider only defendants who have been labeled as White or Black due to sample size concerns.")
+    st.write("In the following analysis, only defendants who have been labeled as White or Black are considered, due to sample size concerns.\
+    Note: the Philadelphia Bail Fund has observed that the Philadelphia court system appears to record most non-Black and non-Asian people, such as Latinx and Indigenous people, as White.\
+    Thus, while the label \"White\" is maintained in the charts, this group is referred to as \"non-Black\" in the text.")
+    st.write("**<font color='red'>Question for PBF</font>**: what disclaimer language would you like to include here? The above was informed by the language in the July 2020 report.", unsafe_allow_html=True)
+    st.write("Given the low freqency of nonmonetary and nominal bail (<1% of all cases), cases where these bail types were set are excluded from consideration in this section, for ease of interpretation.")
     
     st.subheader("Bail type frequency")
+    st.write("Relative to non-Black defendants, Black defendants had monetary bail set more frequently, ROR bail set less frequently, and were more frequently denied bail.")
     st.image(Image.open('figures/race_aggregate_type.png'), width=int(1.5*imgWidth))
-    st.write("Compared to White defendants, Black defendants were less frequently granted ROR bail, which has no monetary payment stipulation, and were more frequently denied bail.")
 
     st.subheader("Bail amount frequency")
-    st.write("When monetary bail is set, White defendants were more frequently assigned a bail amount between $10,000 and $25,000, and Black defendants were more frequently assigned a bail amount between $100,000 and $500,000.")
+    st.write("When monetary bail was set, non-Black defendants were more frequently assigned a bail amount between $10,000 and $25,000, and Black defendants were more frequently assigned a bail amount between $100,000 and $500,000.")
     st.image(Image.open('figures/race_aggregate_set.png'), width=imgWidth)
     
     st.subheader("Bail posted frequency")
-    st.write("Overall, slightly over half of White and Black defendants posted bail (52.5% and 50.6% respsectively). White and Black defendants posted bail at similar rates for each range of bail amounts set.")    
+    st.write("Overall, slightly over half of Black and non-Black defendants posted bail (50.6% and 52.5% respsectively), and defendants posted bail at similar rates for each range of bail amounts set, independent of race. The largest difference was for bail set below $1000, for which Black defendants posted bail at around half the rate of non-Black defendants.")    
     st.image(Image.open('figures/race_aggregate_bailPosted.png'), width=imgWidth)
     """
     st.image(Image.open('figures/bail_paid_race.png'), width=imgWidth)
@@ -47,10 +51,10 @@ def app():
     st.write(
     """While the above figures provide a useful year-end summary, they include variation in bail types and amounts that may be attributed to factors other than race, such as offense types. 
     
-To control for offense types, we conducted a matched study where we sampled cases with identical lists of charges from cases with White and Black defendants. The following results were obtained from the 10593 cases (5115 for Black defendants, 5112 for White defendants) that were sampled. """
+To control for offense types, we conducted a matched study where we sampled cases with identical lists of charges from cases with Black and non-Black defendants. The following results were obtained from the 10593 cases (5115 for Black defendants, 5112 for White defendants) that were sampled.
+
+In this matched sample, bail types and amounts were set at similar rates for Black and non-Black defendants, indicating that variations in these metrics between cases with the same charged offenses may be largely attributed to factors other than the defendant's race (such as the magistrate assigned to the case). """
     )
         
     st.image(Image.open('figures/race_matched_type.png'), width=int(1.5*imgWidth))    
     st.image(Image.open('figures/race_matched_set.png'), width=imgWidth)    
-
-    st.write("When comparing matched cases, there was no difference between bail types or bail amounts set for Black and White defendants.")
