@@ -17,15 +17,17 @@ def load_data():
 def app():
     st.title('Year-end Summary')
     st.write('This section provides a general year-end summary of bail in Philadelphia in 2020, including trends and aggregate-level information for case counts, bail types, and monetary bail set and posted.')
-    
-    # Get bail data
-    #df = preprocess()
-    df = load_data()
 
     # ----------------------------------------------------
     # Summary numbers 
-    # ----------------------------------------------------
-    #st.header('Year-end Summary')
+    # ----------------------------------------------------    
+    # Get bail data
+    #df = preprocess()
+    
+    st.subheader('Yearly totals')
+    st.write("Use the slider to change the range of dates over which the sum is calculated.")
+    
+    df = load_data()
     
     # Get range of dates and create slider to select date range (workaround since Streamlit doesn't have a date range slider)
     # Try.. except block is another workzround. Streamlit caching doesn't work with datetime module
@@ -121,7 +123,7 @@ def app():
     
     st.subheader('Monetary bail posted')
     st.write("In nearly half (49%) of cases where monetary bail was set, bail was not posted, meaning that the defendant was not released from jail. Out of the cases where bail was at least $100,000, less than a quarter of defendants posted bail. Though infrequently set, bail amounts below $1000 were also infrequently posted.")
-    st.write("**<font color='red'>Question for PBF</font>**: do these observations (in particular, low payments of bail set below $1000) match your experience?", unsafe_allow_html=True), 
+    st.write("**<font color='red'>Question for PBF</font>**: do these observations (in particular, low payments of bail set below $1000) match your experience?", unsafe_allow_html=True)
     st.image(Image.open('figures/aggregate_bailPostedBin.png'), width=400)
     st.write("When bail was posted, the median and most frequently paid amount was $2,500 (corresponding to 10% of bail set at $25,000). ")
     st.image(Image.open('figures/aggregate_bailPosted.png'), width=400)    
@@ -159,10 +161,10 @@ def app():
     # Moving average plots 
     # ----------------------------------------------------
     st.subheader('Bail trends over the year')
-    st.write("Use the dropdown menu to view trends in the average bail amount set, number of monetary bail cases, and frequency of monetary bail set. Use the slider to change the number of days over which the moving average is calculated.")
-    st.write("Mean bail amount trended upward over the course of the year. \
+    st.write("Use the dropdown menu to view trends in the mean of different bail metrics. Use the slider to change the number of days over which the moving average is calculated.")
+    st.write("Mean bail amount trended slightly upward over the course of the year. \
     Monetary bail case counts dropped in March, following a decrease in total arrests as a COVID-19 mitigation measure, but returned to pre-pandemic levels by October.\
-    Monetary bail frequency held steady for much of the year, with an upward trend starting in September.")   
+    Monetary bail frequency held steady for much of the year, with a slight upward trend starting in September.")   
     # Make data for each metric + data to initialize the chart
     ma_dfs = {'Bail Amount': df.groupby('bail_date').mean()['bail_amount'], 
               'Monetary Bail Cases': df[df['bail_type'] == 'Monetary'].groupby('bail_date').size(),

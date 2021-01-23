@@ -5,7 +5,7 @@ def app():
     st.image('figures/PBF_logo_edit.png', use_column_width = True)
 
     # What is this app
-    st.header('Bail in Philadelphia, 2020')
+    st.title('Bail in Philadelphia, 2020')
     st.write("This dashboard provides a summary of the bail situation in Philadelphia in 2020. \
         We provide a general year-end summary, along with breakdown by neighborhood, magistrate, and race.\
         Please use the navigation panel on the left to select a page.")    
@@ -16,7 +16,7 @@ def app():
     st.write("The Philadelphia Bail Fund is a revolving fund that posts bail for people who are indigent and cannot afford bail.\
         Our goal is to keep families and communities together and vigorously advocate for the end to cash bail in Philadelphia. ")
 
-    st.header("Get involved")
+    st.subheader("Get involved")
     # learn more
     pbf_link = 'Learn more at [phillybailfund.org](http://phillybailfund.org)'
     st.markdown(pbf_link, unsafe_allow_html = True)
@@ -27,3 +27,8 @@ def app():
 
     # contact us
     st.markdown('Contact us at <a href="mailto:info@phillybailfund.org">info@phillybailfund.org</a>', unsafe_allow_html=True)
+    
+    # What is Code for Philly
+    st.header('Code for Philly')
+    st.write("This dashboard was created by [Code for Philly](https://codeforphilly.org/), a Code For America brigade, in collaboration with the Philadelphia Bail Fund.\
+    We're part of a national alliance of community organizers, developers, and designers that are putting technology to work in service of our local communities.")

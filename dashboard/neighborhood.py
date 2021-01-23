@@ -46,24 +46,54 @@ def preprocess_acs():
 
 def app():
     st.title('Breakdown by Neighborhood')
-    st.write('This section provides an interactive breakdown of case counts and amounts of bail set and paid by Philadelphia zip code, in tandem with income, poverty, and unemployment data from the American Community Survey (ACS), collected by the U.S. Census Bureau.')
-    st.write('Use the dropdown menus to select a given bail and census metric associated with each map. Zip codes with higher levels of each bail metric tend to have lower median incomes and higher poverty and unemployment rates.')
+    st.write('This section provides an interactive breakdown of case counts, total amounts of bail set and paid, and bail payment rate by Philadelphia zip code, in tandem with income, poverty, and unemployment data from the American Community Survey (ACS) collected by the U.S. Census Bureau.')
     st.markdown(f"""
     Source Data: [Median Income]({INCOME}), [Poverty Level]({POVERTY}), [Unemployment Rate]({UNEMPLOYMENT})
         """)
     
+    st.header('Interactive Maps')
+    st.write('Use the dropdown menus to select a given bail and census metric associated with each map.\
+    Hover over an area to view the corresponding metric value and zip code number.\
+    For bail metrics other than case counts, only zip codes with at least 100 cases are shown.')
+    st.write('Zip codes with the highest case counts, highest total bail amounts set and posted, and lowest bail posting rates tend to have lower median incomes and higher poverty and unemployment rates.')
+    st.write("**<font color='red'>Question for PBF</font>**: are there any other bail metrics you'd be interested in viewing in this map?", unsafe_allow_html=True)
+    
     col1, col2 = st.beta_columns(2)
     
-    # Get bail data
+    # ------------------------------------
+    # Process bail data
+    # ------------------------------------
     #df = preprocess()
     df = load_data()
 
     # Create data assoc. w/ each metric (over all bail types) and put in dict
-    case_counts = pd.DataFrame(df['zipcode_clean'].value_counts().reset_index().rename(columns={'index': 'zip', 'zipcode_clean': 'count'}))
+    case_counts = pd.DataFrame(df['zipcode_clean'].value_counts()
+                               .reset_index().rename(columns={'index': 'zip', 'zipcode_clean': 'count'}))
     bail_amounts = df.groupby('zipcode_clean').sum()[['bail_amount']].reset_index()
     bail_paid = df.groupby('zipcode_clean').sum()[['bail_paid']].reset_index()
-    bail_paid_pct = df[df['bail_paid'] > 0].groupby('zipcode_clean').size().div(df['zipcode_clean'].value_counts()).mul(100).round(1).reset_index().rename(columns={'index':'zip', 0:'pct'})
-    cases_dfs = {'Case Count': case_counts, 'Bail Amount': bail_amounts, 'Bail Paid': bail_paid, 'Percent of Cases where Bail Paid': bail_paid_pct}
+    df_monetary = df[df['bail_type'] == 'Monetary'][['zipcode_clean', 'bail_paid']] 
+    bail_paid_pct = (df_monetary[df_monetary['bail_paid'] > 0]['zipcode_clean'].value_counts()
+                     .divide(df_monetary['zipcode_clean'].value_counts())
+                     .mul(100).round(1)
+                     .reset_index().rename(columns={'index': 'zip', 'zipcode_clean': 'pct'}))
+    #public_defender = (df[df['attorney_type'] == 'Public']['zipcode_clean'].value_counts()
+    #                 .divide(df['zipcode_clean'].value_counts())
+    #                 .mul(100).round(1)
+    #                 .reset_index().rename(columns={'index': 'zip', 'zipcode_clean': 'pct'}))
+        
+    # Select only zip codes with at least minCount cases to show in bail metrics map
+    minCount = 100
+    minZips = case_counts[case_counts['count'] >= minCount]['zip'].to_list()
+    #case_counts = case_counts[case_counts['zip'].isin(minZips)]
+    bail_amounts = bail_amounts[bail_amounts['zipcode_clean'].isin(minZips)]
+    bail_paid = bail_paid[bail_paid['zipcode_clean'].isin(minZips)]
+    bail_paid_pct = bail_paid_pct[bail_paid_pct['zip'].isin(minZips)]
+    #public_defender = public_defender[public_defender['zip'].isin(minZips)]
+    
+    cases_dfs = {'Case Count': case_counts,
+                 'Total Bail Set ($)': bail_amounts,
+                 'Total Bail Posted ($)': bail_paid,
+                 'Bail Posting Rate': bail_paid_pct}
     
     # Geo data
     # Approximate Philly lat/long
@@ -74,9 +104,11 @@ def app():
     with open(zips_geo) as f:
         zips_data = json.load(f)
     
+    # ------------------------------------
     # Interactive map for bail metrics
+    # ------------------------------------
     # Make dropdown for bail metric
-    metric = col1.selectbox('Bail Metric', ('Case Count', 'Bail Amount', 'Bail Paid', 'Percent of Cases where Bail Paid'))
+    metric = col1.selectbox('Bail Metric', (tuple(cases_dfs.keys())))
     
     # Get data for the selected metric
     data = cases_dfs[metric]
