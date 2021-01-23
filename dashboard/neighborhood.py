@@ -47,7 +47,8 @@ def preprocess_acs():
 def app():
     st.title('Breakdown by Neighborhood')
     st.write('This section provides an interactive breakdown of case counts and amounts of bail set and paid by Philadelphia zip code, in tandem with income, poverty, and unemployment data from the American Community Survey (ACS), collected by the U.S. Census Bureau.')
-    st.write('Use the dropdown menus to select a given bail and census metric associated with each map. Zip codes with higher levels of each bail metric tend to have lower median incomes and higher poverty and unemployment rates.')
+    st.write('Use the dropdown menus to select a given bail and census metric associated with each map.')
+    st.write('Zip codes with the highest case loads and total bail amounts set and paid tend to have lower median incomes and higher poverty and unemployment rates.')
     st.markdown(f"""
     Source Data: [Median Income]({INCOME}), [Poverty Level]({POVERTY}), [Unemployment Rate]({UNEMPLOYMENT})
         """)
@@ -63,7 +64,7 @@ def app():
     bail_amounts = df.groupby('zipcode_clean').sum()[['bail_amount']].reset_index()
     bail_paid = df.groupby('zipcode_clean').sum()[['bail_paid']].reset_index()
     bail_paid_pct = df[df['bail_paid'] > 0].groupby('zipcode_clean').size().div(df['zipcode_clean'].value_counts()).mul(100).round(1).reset_index().rename(columns={'index':'zip', 0:'pct'})
-    cases_dfs = {'Case Count': case_counts, 'Bail Amount': bail_amounts, 'Bail Paid': bail_paid, 'Percent of Cases where Bail Paid': bail_paid_pct}
+    cases_dfs = {'Case Count': case_counts, 'Total Bail Set': bail_amounts, 'Total Bail Posted': bail_paid, 'Percent of Cases where Bail Paid': bail_paid_pct}
     
     # Geo data
     # Approximate Philly lat/long
@@ -76,7 +77,7 @@ def app():
     
     # Interactive map for bail metrics
     # Make dropdown for bail metric
-    metric = col1.selectbox('Bail Metric', ('Case Count', 'Bail Amount', 'Bail Paid', 'Percent of Cases where Bail Paid'))
+    metric = col1.selectbox('Bail Metric', ('Case Count', 'Total Bail Set', 'Total Bail Posted', 'Percent of Cases where Bail Paid'))
     
     # Get data for the selected metric
     data = cases_dfs[metric]
