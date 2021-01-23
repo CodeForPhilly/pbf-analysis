@@ -116,7 +116,7 @@ def app():
     st.write("The most frequently set bail type in 2020 was monetary bail. Together, nominal or nonmonetary bail were set in under 1% of cases.")
     
     st.subheader('Monetary bail set')
-    st.write("For cases where monetary bail is was set, the median bail set was $30,000. A bail amount of less than $10,000 was set in around 15 percent of cases, and a bail amount of at least $100,000 was set in more than 25 percent of cases.") 
+    st.write("For cases where monetary bail was set, the median bail set was $30,000. A bail amount of less than $10,000 was set in around 15 percent of cases, and a bail amount of at least $100,000 was set in more than 25 percent of cases.") 
     st.image(Image.open('figures/aggregate_bailSetBin.png'), width=400)
     st.write("While the maximum bail set was $5M, bail of at least $500k was set in only 5 percent of cases. Of the specific values of bail that were set below $500k, the most frequently set bail amount was $25,000.")
     st.image(Image.open('figures/aggregate_bailSet500k.png'), width=400) 
