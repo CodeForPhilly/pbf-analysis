@@ -4,7 +4,6 @@ import datetime
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 from PIL import Image
-from preprocess import preprocess
 
 @st.cache(allow_output_mutation = True)
 def load_data():
