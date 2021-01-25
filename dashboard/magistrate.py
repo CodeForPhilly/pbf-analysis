@@ -23,6 +23,7 @@ def app():
 
     # bail type
     st.subheader("Percentage of bail type for each magistrate")
+    st.write("**<font color='red'>Question for PBF</font>**: Would you prefer the following pie chart or the stacked bar chart?",  unsafe_allow_html=True)
     image = Image.open('figures/magistrate_type_summary.png')
     st.image(image, use_column_width=True)
 
@@ -57,6 +58,7 @@ def app():
     st.write("Note that due to the sampling nature of the matched study, the matched dataset will vary across samples. However, the general trends observed below were consistent across multiple samples.")
     # bail type
     st.subheader("Percentage of bail type for each magistrate")
+    st.write("**<font color='red'>Question for PBF</font>**: Would you prefer the pie chart or th bar chart?",  unsafe_allow_html=True)
     image = Image.open('figures/magistrate_matched_type.png')
     st.image(image, use_column_width=True)
 
@@ -66,6 +68,9 @@ def app():
 
     # bail amount
     st.subheader("Monetary bail amount set by each magistrate")
+    st.write("**<font color='red'>Question for PBF</font>**:Would you prefer the box plot or the dot plot? We believe that the box plot is easier for comparison, but the circular plot may be more visually appealing.\
+            In the box plot, the colored bars represent the 25% to 75% range of the bail amount set by the magistrate.\
+            In the circular plot, the size of the circle is proportional to the number of cases that had a specific bail amount. ",  unsafe_allow_html=True) 
     _, col, _ = st.beta_columns([1, 5, 1])
     image = Image.open('figures/magistrate_matched_amount.png')
     col.image(image, use_column_width = True)
