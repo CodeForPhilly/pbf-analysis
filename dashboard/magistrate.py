@@ -19,7 +19,7 @@ def app():
     _, col, _ = st.beta_columns([1,2,1])
     image = Image.open('figures/magistrate_case_count.png')
     col.image(image)
-    st.write("In the year 2020, bail was set by 673 different people. We provide a summary of the bail type and bail amount for cases handled by the nine magistrates who handled more than 300 cases in year 2020.")
+    st.write("In the year 2020, bail was set by 673 different people. We provide a summary of the bail type and bail amount for cases handled by the nine magistrates who handled more than 300 cases in the year 2020.")
 
     # bail type
     st.subheader("Percentage of bail type for each magistrate")
@@ -41,7 +41,7 @@ def app():
     st.write("The above box plot compares the monetary bail amount set by different magistrates. \
             For each magistrate, the vertical line in the colored box represents the median bail amount set by that magistrate. \
             The colored boxes represent the 25% to 75% range of the bail amount set by the magistrate. The dots represent outliers.")
-    st.write("On average (median), the bail amount set by Connor, Bernard, and Rigmaiden-DeLeon ($50k) is higher than bail amount set by others ($25k). \
+    st.write("On average (median), the bail amount set by Connor, Bernard, and Rigmaiden-DeLeon ($50k) is higher than the bail amount set by others ($25k). \
             Moreover, Connor and Bernard seem to have set a wider range of bail amounts than other magistrates. ")
     
 
@@ -51,14 +51,14 @@ def app():
             In particular, the differences among magistrates may stem from the fact that some magistrates may have handled more cases with more severe charges.")
             
     st.write("We compared the bail type and bail amount set by the magistrates while controlling for the difference in the charges. \
-            We selected size magistrates (Bernard, Rainey, Rigmaiden-DeLeon, Stack, E-Filing Judge, and O'Brien) that handled more than 1000 cases in year 2020. \
+            We selected size magistrates (Bernard, Rainey, Rigmaiden-DeLeon, Stack, E-Filing Judge, and O'Brien) that handled more than 1000 cases in the year 2020. \
             We then conducted a matched study where we sampled cases with the same charges that were handled by the six magistrates.")
             
-    st.write("The following results were obtained from the 3186 cases (531 per magistrate) that were sampled. Ideally, there shouldn't be any noticable difference across magistrates.")
+    st.write("The following results were obtained from the 3186 cases (531 per magistrate) that were sampled. Ideally, there shouldn't be any noticeable difference across magistrates.")
     st.write("Note that due to the sampling nature of the matched study, the matched dataset will vary across samples. However, the general trends observed below were consistent across multiple samples.")
     # bail type
     st.subheader("Percentage of bail type for each magistrate")
-    st.write("**<font color='red'>Question for PBF</font>**: Would you prefer the pie chart or th bar chart?",  unsafe_allow_html=True)
+    st.write("**<font color='red'>Question for PBF</font>**: Would you prefer the pie chart or the bar chart?",  unsafe_allow_html=True)
     image = Image.open('figures/magistrate_matched_type.png')
     st.image(image, use_column_width=True)
 
@@ -78,5 +78,5 @@ def app():
     image = Image.open('figures/magistrate_matched_amount_countplot.png')
     col.image(image, use_column_width = True)
     st.write("Even when we control for offense types, we see a difference in the monetary bail amount across magistrates.\
-            While the median bail amount are similar, comparing the colored boxes (which indicates the 25% - 75% range of bail amounts) show that Bernard, Rainey, and Rigmaiden-DeLeon tend to set higher bail amounts than Stack, E-filing Judge, and O'Brien.")
+            While the median bail amounts are similar, comparing the colored boxes (which indicates the 25% - 75% range of bail amounts) show that Bernard, Rainey, and Rigmaiden-DeLeon tend to set higher bail amounts than Stack, E-filing Judge, and O'Brien.")
            
