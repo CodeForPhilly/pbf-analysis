@@ -104,13 +104,15 @@ def app():
 - the defendant may be **denied** bail.""")
     
     # By Bail Type
+    """
     pie1_fig = go.FigureWidget()
     pie1_fig.add_trace(go.Pie(labels=df_bail.index.tolist(), values=df_bail.values.tolist()))
     pie1_fig.update_traces(hole=.4, hoverinfo="label+percent+value")
     pie1_fig.update_layout(showlegend=True, title_text='Bail Type', title_x=0.45)
     pie1_fig.update_layout(margin={"r":0,"t":100,"l":0,"b":0}, height=400, width=400)
     st.plotly_chart(pie1_fig)    
-    #st.image(Image.open('figures/aggregate_bailType.png'), width=400)
+    """
+    st.image(Image.open('figures/aggregate_bail_type.png'), width=400)
     
     st.write("The most frequently set bail type in 2020 was monetary bail. Together, nominal or nonmonetary bail were set in under 1% of cases.")
     
