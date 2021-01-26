@@ -3,7 +3,7 @@ from PIL import Image
 
 def app():
     st.image('figures/PBF_logo_edit.png', use_column_width = True)
-
+    
     # What is this app
     st.title('Bail in Philadelphia, 2020')
     st.write("This dashboard provides a summary of the bail situation in Philadelphia in 2020. \
