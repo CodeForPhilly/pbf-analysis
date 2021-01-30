@@ -29,7 +29,7 @@ def app():
     st.image(Image.open('figures/race_aggregate_set.png'), width=imgWidth)
     
     st.subheader("Bail posted frequency")
-    st.write("Overall, slightly over half of Black and non-Black defendants posted bail (50.6% and 52.5% respsectively), and defendants posted bail at similar rates for each range of bail amounts set, independent of race. The largest difference was for bail set below $1000, for which Black defendants posted bail at around half the rate of non-Black defendants.")    
+    st.write("Overall, slightly less than half of Black and non-Black defendants posted bail (46% and 46% respsectively), and defendants posted bail at similar rates for each range of bail amounts set, independent of race.")    
     st.image(Image.open('figures/race_aggregate_bailPosted.png'), width=imgWidth)
     """
     st.image(Image.open('figures/bail_paid_race.png'), width=imgWidth)
@@ -51,7 +51,7 @@ def app():
     st.write(
     """While the above figures provide a useful year-end summary, they include variation in bail types and amounts that may be attributed to factors other than race, such as offense types. 
     
-To control for offense types, we conducted a matched study where we sampled cases with identical lists of charges from cases with Black and non-Black defendants. The following results were obtained from the 10593 cases (5115 for Black defendants, 5112 for White defendants) that were sampled.
+To control for offense types, we conducted a matched study where we sampled cases with identical lists of charges from cases with Black and non-Black defendants. The following results were obtained from the 11026 cases (5328 for Black defendants, 5328 for White defendants) that were sampled.
 
 In this matched sample, bail types and amounts were set at similar rates for Black and non-Black defendants, indicating that variations in these metrics between cases with the same charged offenses may be largely attributed to factors other than the defendant's race (such as the magistrate assigned to the case). """
     )
