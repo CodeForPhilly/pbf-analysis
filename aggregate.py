@@ -100,7 +100,7 @@ def app():
 - **monetary**, where a bail amount is set and the defendant is held in jail until a portion (typically 10%) is paid (\"posted\"),
 - **unsecured**, where the defendant is liable for a set bail amount if they do not show up to future court proceedings,
 - **ROR** (“released on own recognizance”), where a defendant must agree to show up to all future court proceedings,
-- other **nonmonetary** or **nominal** bail conditions, or
+- **nonmonetary** bail condition, or
 - the defendant may be **denied** bail.""")
     
     # By Bail Type
@@ -112,18 +112,19 @@ def app():
     pie1_fig.update_layout(margin={"r":0,"t":100,"l":0,"b":0}, height=400, width=400)
     st.plotly_chart(pie1_fig)    
     """
+
     st.image(Image.open('figures/aggregate_bail_type.png'), width=400)
     
-    st.write("The most frequently set bail type in 2020 was monetary bail. Together, nominal or nonmonetary bail were set in under 1% of cases.")
+    st.write("The most frequently set bail type in 2020 was monetary bail. Nonmonetary bail was set in under 1% of cases.")
     
     st.subheader('Monetary bail set')
-    st.write("For cases where monetary bail was set, the median bail set was $30,000. A bail amount of less than $10,000 was set in around 15 percent of cases, and a bail amount of at least $100,000 was set in more than 25 percent of cases.") 
+    st.write("For cases where monetary bail was set, the median bail set was $50,000. A bail amount of less than $10,000 was set in around 19 percent of cases, and a bail amount of at least $100,000 was set in more than 25 percent of cases.") 
     st.image(Image.open('figures/aggregate_bailSetBin.png'), width=400)
-    st.write("While the maximum bail set was $5M, bail of at least $500k was set in only 5 percent of cases. Of the specific values of bail that were set below $500k, the most frequently set bail amount was $25,000.")
+    st.write("While the maximum bail set was $5M, bail of at least $500k was set in only 5 percent of cases. Of the specific values of bail that were set below $500k, the most frequently set bail amount was $50,000.")
     st.image(Image.open('figures/aggregate_bailSet500k.png'), width=400) 
     
     st.subheader('Monetary bail posted')
-    st.write("In nearly half (49%) of cases where monetary bail was set, bail was not posted, meaning that the defendant was not released from jail. Out of the cases where bail was at least $100,000, less than a quarter of defendants posted bail. Though infrequently set, bail amounts below $1000 were also infrequently posted.")
+    st.write("In more than half (54%) of cases where monetary bail was set, bail was not posted, meaning that the defendant was not released from jail. Out of the cases where bail was at least $100,000, less than 30% of defendants posted bail. Though infrequently set, bail amounts below $1000 were also infrequently posted.")
     st.write("**<font color='red'>Question for PBF</font>**: do these observations (in particular, low payments of bail set below $1000) match your experience?", unsafe_allow_html=True)
     st.image(Image.open('figures/aggregate_bailPostedBin.png'), width=400)
     st.write("When bail was posted, the median and most frequently paid amount was $2,500 (corresponding to 10% of bail set at $25,000). ")
@@ -142,12 +143,15 @@ def app():
     st.subheader('Attorney types')
     # By Atty Type
     st.write("Public defenders, representing defendants who cannot afford to hire a lawyer, were appointed in more than two thirds of cases.")    
+    st.image(Image.open('figures/aggregate_attorney_type.png'), width=400)
+    """
     pie3_fig = go.FigureWidget()
     pie3_fig.add_trace(go.Pie(labels=df_defender.index.tolist(), values=df_defender.values.tolist()))
     pie3_fig.update_traces(hole=.4, hoverinfo="label+percent+value")
     pie3_fig.update_layout(showlegend=True, title_text='Attorney Type', title_x=0.45)
     pie3_fig.update_layout(margin={"r":0,"t":100,"l":0,"b":0}, height=400, width=400)
     st.plotly_chart(pie3_fig)
+    """
 
     # TODO: fix these figures such that the same colors/order are used for each bail type
     st.subheader('Charged offenses and bail type') 

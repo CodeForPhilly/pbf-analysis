@@ -64,7 +64,7 @@ def app():
 
     image = Image.open('figures/magistrate_matched_type_bar.png')
     st.image(image)
-    st.write("When we control for the offense types, all magistrates set monetary bail to 27%-37% of their cases.")
+    st.write("When we control for the offense types, all magistrates set monetary bail to 28%-40% of their cases.")
 
     # bail amount
     st.subheader("Monetary bail amount set by each magistrate")
