@@ -76,6 +76,7 @@ Send2Trash==1.5.0
 six==1.15.0
 smart-open==4.0.1
 smmap==3.0.4
+statsmodels==0.12.1
 streamlit==0.73.0
 terminado==0.9.1
 testpath==0.4.4
