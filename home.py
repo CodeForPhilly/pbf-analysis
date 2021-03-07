@@ -9,7 +9,7 @@ def app():
     st.write("This dashboard provides a summary of the bail situation in Philadelphia in 2020. \
         We provide a general year-end summary, along with breakdown by neighborhood, magistrate, and race.\
         Please use the navigation panel on the left to select a page.")    
-    st.write("Information from the **24,221 cases** used to create this dashboard was gathered from [Philadelphia Municipal Court docket sheets.](https://ujsportal.pacourts.us/DocketSheets/MC.aspx#)")
+    st.write("Information from the **24,225 cases** used to create this dashboard was gathered from [Philadelphia Municipal Court docket sheets.](https://ujsportal.pacourts.us/DocketSheets/MC.aspx#)")
 
     # What is PBF 
     st.header('The Philadelphia Bail Fund')
