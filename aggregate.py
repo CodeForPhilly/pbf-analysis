@@ -113,18 +113,18 @@ def app():
     st.plotly_chart(pie1_fig)    
     """
 
-    st.image(Image.open('figures/aggregate_bail_type.png'), width=400)
+    st.image(Image.open('figures/aggregate_bail_type.png'), width=600)
     
     st.write("The most frequently set bail type in 2020 was monetary bail. Nonmonetary bail was set in under 1% of cases.")
     
     st.subheader('Monetary bail set')
-    st.write("For cases where monetary bail was set, the median bail set was $50,000. A bail amount of less than $10,000 was set in around 19 percent of cases, and a bail amount of at least $100,000 was set in more than 25 percent of cases.") 
+    st.write("For cases where monetary bail was set, the median bail set was $40,000. A bail amount of less than $10,000 was set in around 19 percent of cases, and a bail amount of at least $100,000 was set in more than 25 percent of cases.") 
     st.image(Image.open('figures/aggregate_bailSetBin.png'), width=400)
     st.write("While the maximum bail set was $5M, bail of at least $500k was set in only 5 percent of cases. Of the specific values of bail that were set below $500k, the most frequently set bail amount was $50,000.")
     st.image(Image.open('figures/aggregate_bailSet500k.png'), width=400) 
     
     st.subheader('Monetary bail posted')
-    st.write("In more than half (54%) of cases where monetary bail was set, bail was not posted, meaning that the defendant was not released from jail. Out of the cases where bail was at least $100,000, less than 30% of defendants posted bail. Though infrequently set, bail amounts below $1000 were also infrequently posted.")
+    st.write("In more than half (56%) of cases where monetary bail was set, bail was not posted, meaning that the defendant was not released from jail. Out of the cases where bail was at least $100,000, less than 30% of defendants posted bail. Though infrequently set, bail amounts below $1000 were also infrequently posted.")
     st.write("**<font color='red'>Question for PBF</font>**: do these observations (in particular, low payments of bail set below $1000) match your experience?", unsafe_allow_html=True)
     st.image(Image.open('figures/aggregate_bailPostedBin.png'), width=400)
     st.write("When bail was posted, the median and most frequently paid amount was $2,500 (corresponding to 10% of bail set at $25,000). ")
@@ -143,7 +143,7 @@ def app():
     st.subheader('Attorney types')
     # By Atty Type
     st.write("Public defenders, representing defendants who cannot afford to hire a lawyer, were appointed in more than two thirds of cases.")    
-    st.image(Image.open('figures/aggregate_attorney_type.png'), width=400)
+    st.image(Image.open('figures/aggregate_attorney_type.png'), width=600)
     """
     pie3_fig = go.FigureWidget()
     pie3_fig.add_trace(go.Pie(labels=df_defender.index.tolist(), values=df_defender.values.tolist()))

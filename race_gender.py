@@ -29,7 +29,7 @@ def app():
     st.image(Image.open('figures/race_aggregate_set.png'), width=imgWidth)
     
     st.subheader("Bail posted frequency")
-    st.write("Overall, slightly less than half of Black and non-Black defendants posted bail (46% and 46% respsectively), and defendants posted bail at similar rates for each range of bail amounts set, independent of race.")    
+    st.write("Overall, slightly less than half of Black and non-Black defendants posted bail (44% and 44% respsectively), and defendants posted bail at similar rates for each range of bail amounts set, independent of race.")    
     st.image(Image.open('figures/race_aggregate_bailPosted.png'), width=imgWidth)
     """
     st.image(Image.open('figures/bail_paid_race.png'), width=imgWidth)
