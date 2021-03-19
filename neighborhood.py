@@ -17,19 +17,19 @@ https://data.census.gov/cedsci/table?q=S2301&g=0400000US42_8600000US19102,19103,
 '''
 @st.cache()
 def load_data():
-    df = pd.read_csv('data.csv')
+    df = pd.read_csv('data/cleaned/data.csv')
     df["bail_date"] = pd.to_datetime(df["bail_date"])
     return df
 
 @st.cache()
 def preprocess_acs():
-    income_df = pd.read_csv('data/income/cleaned_income.csv')
+    income_df = pd.read_csv('data/external/income/cleaned_income.csv')
     income_df = income_df[['zipcode', 'households_median_income']]
     
-    poverty_df = pd.read_csv('data/poverty/cleaned_poverty.csv')
+    poverty_df = pd.read_csv('data/external/poverty/cleaned_poverty.csv')
     poverty_df = poverty_df[['zipcode', 'percent_below_poverty']]
 
-    unemployment_df = pd.read_csv('data/unemployment/cleaned_unemployment.csv')
+    unemployment_df = pd.read_csv('data/external/unemployment/cleaned_unemployment.csv')
     unemployment_df = unemployment_df[['zipcode', 'unemployment_rate']]    
     
     acs_df = income_df.merge(poverty_df, on='zipcode', how='outer')
@@ -100,7 +100,7 @@ def app():
     philly = (40.0, -75.13)
 
     # Open geojson of philly zip code borders
-    zips_geo = 'Zipcodes_Poly.geojson'
+    zips_geo = 'data/external/Zipcodes_Poly.geojson'
     with open(zips_geo) as f:
         zips_data = json.load(f)
     
