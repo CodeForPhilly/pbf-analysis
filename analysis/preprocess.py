@@ -1,7 +1,6 @@
 """
-Functions to preprocess data.
+Define functions to preprocess the raw data from pbf-scraping.
 Include the following cell/script at the beginning of every analysis script:
-    
     import preprocess
     df = preprocess.merge_and_clean_data(path_to_docket_csv, path_to_court_csv,
                                          outPath=path_to_output_csv)
