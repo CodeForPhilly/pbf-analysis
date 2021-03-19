@@ -32,6 +32,7 @@ def merge_and_clean_data(docketPath, courtPath, outPath='full_data.csv',
     if not overwrite:
         try:
             df = pd.read_csv(outPath)
+            print("> Loaded existing file")
             return df
         except FileNotFoundError:
             pass
@@ -78,7 +79,7 @@ def merge_and_clean_data(docketPath, courtPath, outPath='full_data.csv',
     maxDays = 5
     if verbose:
         nOutliers = len(df[(df['bail_date'] - df['prelim_hearing_dt']).dt.days >= maxDays])
-        print(f"Removing {nOutliers} cases for which prelim_hearing_dt was more than {maxDays}...")
+        print(f"Removing {nOutliers} cases for which prelim_hearing_dt - bail_date was more than {maxDays}...")
     df = df[(df['bail_date'] - df['prelim_hearing_dt']).dt.days < 5]
     df.reset_index(drop=True, inplace=True)
     
@@ -111,9 +112,11 @@ def merge_and_clean_data(docketPath, courtPath, outPath='full_data.csv',
     # Print short report
     # =========================================================================
     if verbose:
-        print(f"Imported {df.shape[0]} rows with {df.shape[1]} columns")
-        print(sorted(df.columns.tolist()))    
-        print(df.head())
+        print(f"Imported {df.shape[0]} rows with {df.shape[1]} columns:")
+        print("\n\t".join(sorted(df.columns.tolist())))
+    
+    df.to_csv(outPath)
+    print("> Saved new file")
     
     return df
 
@@ -124,12 +127,14 @@ def trim_data_for_app(df, outPath='app_data.csv', overwrite=False):
     # Try to load existing file, if desired
     if not overwrite:
         if os.path.isfile(outPath):
+            print("> Loaded existing file")
             return
 
     columns = ['attorney_type', 'bail_date', 'bail_type', 'bail_amount',
                'bail_set_bin', 'bail_paid', 'zip']
     df_app = df[columns]
     df_app.to_csv(outPath)
+    print("> Saved new file")
 
 
 def get_bail_bin_labels():
