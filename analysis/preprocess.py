@@ -127,7 +127,7 @@ def trim_data_for_app(df, outPath='app_data.csv', overwrite=False):
             return
 
     columns = ['attorney_type', 'bail_date', 'bail_type', 'bail_amount',
-               'bail_set_bin', 'bail_paid', 'zipcode_clean']
+               'bail_set_bin', 'bail_paid', 'zip']
     df_app = df[columns]
     df_app.to_csv(outPath)
 
