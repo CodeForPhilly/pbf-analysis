@@ -1,4 +1,4 @@
-,attorney_type,bail_date,bail_type,bail_amount,bail_set_bin,bail_paid,zipcode_clean
+,attorney_type,bail_date,bail_type,bail_amount,bail_set_bin,bail_paid,zip
 0,Public,2020-01-01,ROR,0.0,None,0.0,19115
 1,Private,2020-01-01,ROR,0.0,None,0.0,19134
 2,Public,2020-01-01,ROR,0.0,None,0.0,19131

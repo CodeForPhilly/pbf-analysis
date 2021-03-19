@@ -7,7 +7,7 @@ from PIL import Image
 
 @st.cache(allow_output_mutation = True)
 def load_data():
-    df = pd.read_csv('data/cleaned/data.csv')
+    df = pd.read_csv('data/cleaned/app_data.csv')
     df["bail_date"] = pd.to_datetime(df["bail_date"])
     return df
 

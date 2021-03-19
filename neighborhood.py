@@ -17,7 +17,7 @@ https://data.census.gov/cedsci/table?q=S2301&g=0400000US42_8600000US19102,19103,
 '''
 @st.cache()
 def load_data():
-    df = pd.read_csv('data/cleaned/data.csv')
+    df = pd.read_csv('data/cleaned/app_data.csv')
     df["bail_date"] = pd.to_datetime(df["bail_date"])
     return df
 
@@ -67,26 +67,26 @@ def app():
     df = load_data()
 
     # Create data assoc. w/ each metric (over all bail types) and put in dict
-    case_counts = pd.DataFrame(df['zipcode_clean'].value_counts()
-                               .reset_index().rename(columns={'index': 'zip', 'zipcode_clean': 'count'}))
-    bail_amounts = df.groupby('zipcode_clean').sum()[['bail_amount']].reset_index()
-    bail_paid = df.groupby('zipcode_clean').sum()[['bail_paid']].reset_index()
-    df_monetary = df[df['bail_type'] == 'Monetary'][['zipcode_clean', 'bail_paid']] 
-    bail_paid_pct = (df_monetary[df_monetary['bail_paid'] > 0]['zipcode_clean'].value_counts()
-                     .divide(df_monetary['zipcode_clean'].value_counts())
+    case_counts = pd.DataFrame(df['zip'].value_counts()
+                               .reset_index().rename(columns={'index': 'zip', 'zip': 'count'}))
+    bail_amounts = df.groupby('zip').sum()[['bail_amount']].reset_index()
+    bail_paid = df.groupby('zip').sum()[['bail_paid']].reset_index()
+    df_monetary = df[df['bail_type'] == 'Monetary'][['zip', 'bail_paid']] 
+    bail_paid_pct = (df_monetary[df_monetary['bail_paid'] > 0]['zip'].value_counts()
+                     .divide(df_monetary['zip'].value_counts())
                      .mul(100).round(1)
-                     .reset_index().rename(columns={'index': 'zip', 'zipcode_clean': 'pct'}))
+                     .reset_index().rename(columns={'index': 'zip', 'zip': 'pct'}))
     #public_defender = (df[df['attorney_type'] == 'Public']['zipcode_clean'].value_counts()
     #                 .divide(df['zipcode_clean'].value_counts())
     #                 .mul(100).round(1)
-    #                 .reset_index().rename(columns={'index': 'zip', 'zipcode_clean': 'pct'}))
+    #                 .reset_index().rename(columns={'index': 'zipcode', 'zip': 'pct'}))
         
     # Select only zip codes with at least minCount cases to show in bail metrics map
     minCount = 100
     minZips = case_counts[case_counts['count'] >= minCount]['zip'].to_list()
     #case_counts = case_counts[case_counts['zip'].isin(minZips)]
-    bail_amounts = bail_amounts[bail_amounts['zipcode_clean'].isin(minZips)]
-    bail_paid = bail_paid[bail_paid['zipcode_clean'].isin(minZips)]
+    bail_amounts = bail_amounts[bail_amounts['zip'].isin(minZips)]
+    bail_paid = bail_paid[bail_paid['zip'].isin(minZips)]
     bail_paid_pct = bail_paid_pct[bail_paid_pct['zip'].isin(minZips)]
     #public_defender = public_defender[public_defender['zip'].isin(minZips)]
     
