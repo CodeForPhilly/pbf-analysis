@@ -31,9 +31,14 @@ def merge_and_clean_data(docketPath, courtPath, outPath='full_data.csv',
     # Try to load existing file, if desired
     if not overwrite:
         try:
+            # Load and convert dates and lists to appropriate formats
             df = pd.read_csv(outPath)
+            df = convert_dates_to_datetime(df)
+            df = convert_lists(df)
             print("> Loaded existing file")
+            
             return df
+        
         except FileNotFoundError:
             pass
     
@@ -46,6 +51,12 @@ def merge_and_clean_data(docketPath, courtPath, outPath='full_data.csv',
     df.drop(df.filter(regex='_y$').columns.tolist(), axis=1, inplace=True)
 
     # =========================================================================
+    # Update data formats
+    # =========================================================================
+    df = convert_dates_to_datetime(df)
+    df = convert_lists(df)
+    
+    # =========================================================================
     # Clean data in existing columns
     # =========================================================================
     # Fill empty bail_type with 'Denied'
@@ -54,21 +65,6 @@ def merge_and_clean_data(docketPath, courtPath, outPath='full_data.csv',
     # Convert 'Emergency Arraignment Court Magistrate' to 'E-Filing Judge'
     df['bail_set_by'] = df['bail_set_by'].apply(
         lambda x: 'E-Filing Judge' if x == 'Emergency Arraignment Court Magistrate' else x)
-    
-    # Convert strings containing dates to datetime objects
-    df["offense_date"] = pd.to_datetime(df["offense_date"])
-    df["arrest_dt"] = pd.to_datetime(df["arrest_dt"])
-    df["dob"] = pd.to_datetime(df["dob"])
-    df["bail_date"] = pd.to_datetime(df["bail_date"])
-    df["prelim_hearing_dt"] = df["prelim_hearing_dt"].apply(
-        lambda x: str(x).split(' ')[0] if pd.notnull(x) else x) # TODO: This was here because of a parsing issue - is it still necessary?
-    df["prelim_hearing_dt"] = pd.to_datetime(df["prelim_hearing_dt"])
-    df["prelim_hearing_time"] = pd.to_datetime(df["prelim_hearing_time"])
-    
-    # Convert string representations of lists to lists
-    df["offenses"] = df["offenses"].apply(lambda x: ast.literal_eval(x))
-    df['offense_type'] = df['offense_type'].apply(lambda x: ast.literal_eval(x))
-    df['statute'] = df['statute'].apply(lambda x: ast.literal_eval(x))
 
     # Clean zipcode column: remove everything after hyphen if present
     df['zip'] = df['zip'].apply(
@@ -85,9 +81,6 @@ def merge_and_clean_data(docketPath, courtPath, outPath='full_data.csv',
     
     # =========================================================================
     # Create new columns from existing column data
-    # zipcode_clean -> zip
-    # philly_zipcode -> is_philly_zipcode (1/0)
-    # bail_paid_YN -> is_bail_posted (1/0)
     # =========================================================================
     # Create boolean column indicating whether zipcode is in Philadelphia
     philly_zip = list(range(19102, 19155))
@@ -117,6 +110,29 @@ def merge_and_clean_data(docketPath, courtPath, outPath='full_data.csv',
     
     df.to_csv(outPath)
     print("> Saved new file")
+    
+    return df
+
+
+def convert_dates_to_datetime(df):
+    """Convert strings containing dates to datetime objects"""
+    df["offense_date"] = pd.to_datetime(df["offense_date"])
+    df["arrest_dt"] = pd.to_datetime(df["arrest_dt"])
+    df["dob"] = pd.to_datetime(df["dob"])
+    df["bail_date"] = pd.to_datetime(df["bail_date"])
+    df["prelim_hearing_dt"] = df["prelim_hearing_dt"].apply(
+        lambda x: str(x).split(' ')[0] if pd.notnull(x) else x) # TODO: This was here because of a parsing issue - is it still necessary?
+    df["prelim_hearing_dt"] = pd.to_datetime(df["prelim_hearing_dt"])
+    df["prelim_hearing_time"] = pd.to_datetime(df["prelim_hearing_time"])
+
+    return df
+
+
+def convert_lists(df):
+    """Convert string representations of lists to lists"""
+    df["offenses"] = df["offenses"].apply(lambda x: ast.literal_eval(x))
+    df['offense_type'] = df['offense_type'].apply(lambda x: ast.literal_eval(x))
+    df['statute'] = df['statute'].apply(lambda x: ast.literal_eval(x))
     
     return df
 
