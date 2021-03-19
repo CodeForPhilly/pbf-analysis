@@ -100,7 +100,7 @@ def app():
     philly = (40.0, -75.13)
 
     # Open geojson of philly zip code borders
-    zips_geo = 'data/external/Zipcodes_Poly.geojson'
+    zips_geo = 'data/external/zipcodes_poly.geojson'
     with open(zips_geo) as f:
         zips_data = json.load(f)
     
