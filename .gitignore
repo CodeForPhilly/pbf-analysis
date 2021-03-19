@@ -11,6 +11,7 @@ ipython_config.py
 __pycache__/
 */__pycache__/
 
-# data
-data/raw/
-data/tmp/
+# Data: ignore raw and temp (keep folder if empty)
+data/raw/*
+data/tmp/*
+!.keep
