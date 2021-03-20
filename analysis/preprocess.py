@@ -18,7 +18,7 @@ import regex as re
 # Functions to be called outside of this file
 # =============================================================================
 def merge_and_clean_data(docketPath, courtPath, outPath='full_data.csv',
-                         overwrite=False, verbose=False):
+                         overwrite=True, verbose=False):
     """Preprocess raw data: merge, clean, and add columns.
     Arguments:
         docketPath: full path to docket raw data .csv file
@@ -33,9 +33,10 @@ def merge_and_clean_data(docketPath, courtPath, outPath='full_data.csv',
         try:
             # Load and convert dates and lists to appropriate formats
             df = pd.read_csv(outPath)
-            df = convert_dates_to_datetime(df)
+            df = convert_datetime(df)
             df = convert_lists(df)
             print("> Loaded existing file")
+            print_report(df, verbose)
             
             return df
         
@@ -53,7 +54,7 @@ def merge_and_clean_data(docketPath, courtPath, outPath='full_data.csv',
     # =========================================================================
     # Update data formats
     # =========================================================================
-    df = convert_dates_to_datetime(df)
+    df = convert_datetime(df)
     df = convert_lists(df)
     
     # =========================================================================
@@ -78,7 +79,7 @@ def merge_and_clean_data(docketPath, courtPath, outPath='full_data.csv',
         print(f"Removing {nOutliers} cases for which prelim_hearing_dt - bail_date was more than {maxDays}...")
     df = df[(df['bail_date'] - df['prelim_hearing_dt']).dt.days < 5]
     df.reset_index(drop=True, inplace=True)
-    
+
     # =========================================================================
     # Create new columns from existing column data
     # =========================================================================
@@ -90,7 +91,6 @@ def merge_and_clean_data(docketPath, courtPath, outPath='full_data.csv',
     # Create column corresponding to age at time of arrest
     df['age'] = df['arrest_dt'] - df['dob']
     df['age'] = df['age'].apply(lambda x: np.floor(x.days/365.2425))
-    df.drop(columns=['dob'], inplace=True)
 
     # Create categorial column for age group
     df['age_group'] = df['age'].apply(lambda x: bin_age(x))
@@ -102,48 +102,22 @@ def merge_and_clean_data(docketPath, courtPath, outPath='full_data.csv',
     df['is_bail_posted'] = df['bail_paid'].apply(lambda x: 0 if x == 0 else 1) 
         
     # =========================================================================
-    # Print short report
+    # Report and save
     # =========================================================================
-    if verbose:
-        print(f"Imported {df.shape[0]} rows with {df.shape[1]} columns:")
-        print("\n\t".join(sorted(df.columns.tolist())))
-    
+    print_report(df, verbose)
     df.to_csv(outPath)
     print("> Saved new file")
     
     return df
 
 
-def convert_dates_to_datetime(df):
-    """Convert strings containing dates to datetime objects"""
-    df["offense_date"] = pd.to_datetime(df["offense_date"])
-    df["arrest_dt"] = pd.to_datetime(df["arrest_dt"])
-    df["dob"] = pd.to_datetime(df["dob"])
-    df["bail_date"] = pd.to_datetime(df["bail_date"])
-    df["prelim_hearing_dt"] = df["prelim_hearing_dt"].apply(
-        lambda x: str(x).split(' ')[0] if pd.notnull(x) else x) # TODO: This was here because of a parsing issue - is it still necessary?
-    df["prelim_hearing_dt"] = pd.to_datetime(df["prelim_hearing_dt"])
-    df["prelim_hearing_time"] = pd.to_datetime(df["prelim_hearing_time"])
-
-    return df
-
-
-def convert_lists(df):
-    """Convert string representations of lists to lists"""
-    df["offenses"] = df["offenses"].apply(lambda x: ast.literal_eval(x))
-    df['offense_type'] = df['offense_type'].apply(lambda x: ast.literal_eval(x))
-    df['statute'] = df['statute'].apply(lambda x: ast.literal_eval(x))
-    
-    return df
-
-
-def trim_data_for_app(df, outPath='app_data.csv', overwrite=False):
+def trim_data_for_app(df, outPath='app_data.csv', overwrite=True):
     """Create minimum necessary dataset for app deployment.
     Used to generate interactive figures"""
     # Try to load existing file, if desired
     if not overwrite:
         if os.path.isfile(outPath):
-            print("> Loaded existing file")
+            print("> File not overwritten")
             return
 
     columns = ['attorney_type', 'bail_date', 'bail_type', 'bail_amount',
@@ -155,14 +129,15 @@ def trim_data_for_app(df, outPath='app_data.csv', overwrite=False):
 
 def get_bail_bin_labels():
     """Define labels for bail amount set bins.
-    TODO: auto-generate bail_bin_labels to not have to manually update """
-    bail_bin_labels = ['None', '<1k', '1k to 5k', '5k to 10k', '10k to 25k', '25k to 50k', '50k to 100k', '100k to 500k', '>=500k']
+    TODO: auto-generate bail_bin_labels to not have to manually update! """
+    bail_bin_labels = ['None', '<1k', '1k to 5k', '5k to 10k', '10k to 25k',
+                       '25k to 50k', '50k to 100k', '100k to 500k', '>=500k']
     return bail_bin_labels
 
 
 def get_age_bin_labels():
     """Define labels for bail amount set bins.
-    TODO: auto-generate bail_bin_labels to not have to manually update """
+    TODO: auto-generate age_bin_labels to not have to manually update! """
     age_bin_labels = ['minor', '18 to 25', '26 to 64', '65+']
     return age_bin_labels
 
@@ -202,6 +177,32 @@ def bin_age(age):
         return '26 to 64'
     else:
         return '65+'
+
+
+def convert_datetime(df):
+    """Convert strings containing dates or times to datetime objects"""
+    dates = ['offense_date', 'arrest_dt', 'bail_date', 'dob',
+             'prelim_hearing_dt', 'prelim_hearing_time']
+    for d in dates:
+        df[d] = df[d].apply(lambda x: pd.to_datetime(x))
+    
+    return df
+
+
+def convert_lists(df):
+    """Convert string representations of lists to lists"""
+    df['offenses'] = df['offenses'].apply(lambda x: ast.literal_eval(x))
+    df['offense_type'] = df['offense_type'].apply(lambda x: ast.literal_eval(x))
+    df['statute'] = df['statute'].apply(lambda x: ast.literal_eval(x))
+    
+    return df    
+
+
+def print_report(df, verbose):
+    """Short summary of imported data"""
+    if verbose:
+        print(f"> Imported {df.shape[0]} rows with {df.shape[1]} columns:")
+        print("\n".join(sorted(df.columns.tolist())))    
 
 # =============================================================================
 # Main
