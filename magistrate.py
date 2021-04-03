@@ -1,5 +1,13 @@
 import streamlit as st
 from PIL import Image
+import pandas as pd
+import numpy as np
+import plotly.graph_objs as go
+
+@st.cache()
+def load_data():
+    df = pd.read_csv('data/cleaned/app_magistrate_data.csv')
+    return df
 
 def app():
 
@@ -32,6 +40,65 @@ def app():
     st.write("The above pie chart shows the percentage of bail types set by each magistrate. \
             While there isn't a huge variability across magistrates, we can see that E-filing judges set fewer monetary bail than other magistrates.")
 
+
+    # Interactive bar plot
+    df_magistrate = load_data()
+    bail_type = ["Monetary", "ROR", "Unsecured", "Other"]
+    x_data = np.array(df_magistrate[bail_type])
+    x_t = x_data.transpose()
+
+    x_hover = np.array(df_magistrate[["Monetary_count", "ROR_count", "Unsecured_count", "Other_count"]])
+    x_ht = x_hover.transpose()
+
+    y_data = list(df_magistrate['magistrate'].values)
+
+    total_count = df_magistrate['Total'].astype(int)
+    bail_set = df_magistrate["bail_amount"]
+    
+    # set figure object
+    # plot interactive bar plot
+    fig = go.Figure()
+
+    for i in range(4):
+        # text
+        text = [str(item)+"%"  if item > 8 else "" for item in x_t[i]]
+        
+        # hover text
+        # include monetary bail
+        if i == 0: 
+                        hovertext = ["name: " + name + "<br>"
+                        + "percentage: " + str(perct) + "%" + "<br>"
+                        + "case count: " + str(case) + " / " + str(total) + "<br>"
+                        + "total monetary bail amount set: " + str(amount) 
+                        for name, perct, case, total, amount in zip(y_data, x_t[i], x_ht[i], total_count, bail_set)]
+        else:
+                        hovertext = ["name: " + name + "<br>"
+                        + "percentage: " + str(perct) + "%" + "<br>"
+                        + "case count: " + str(case) + " / " + str(total)
+                        for name, perct, case, total in zip(y_data, x_t[i], x_ht[i], total_count)]
+        
+        fig.add_trace(go.Bar(
+                y = y_data,
+                x = x_t[i],
+                text = text,
+                textposition = "inside",
+                name = bail_type[i],
+                hoverinfo = 'text',
+                hovertext = hovertext,
+                orientation = 'h'))
+
+    fig.update_layout(barmode='stack',
+                legend = {'traceorder': 'normal'},
+                xaxis_title="percentage",
+                yaxis_title="magistrate",
+                legend_title="bail type",
+                )
+
+
+    f2 = go.FigureWidget(fig)
+    _, col, _ = st.beta_columns([1, 15, 1])
+    col.plotly_chart(f2)
+    
 
     # bail amount
     st.subheader("Monetary bail amount set by each magistrate")
