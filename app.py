@@ -3,6 +3,7 @@ import streamlit as st
 import home
 import aggregate
 import magistrate
+import price
 import neighborhood
 import race_gender
 
@@ -10,8 +11,9 @@ def main():
     PAGES = {
         "Home": home,
         "Summary" : aggregate,
-        "Magistrates" : magistrate,
-        "Neighborhoods" : neighborhood,
+        "By Actor" : magistrate,
+        "By Price" : price,
+        "By Neighborhood" : neighborhood,
         "Race": race_gender
     }
     st.sidebar.title('Navigation')
