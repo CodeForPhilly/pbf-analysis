@@ -15,7 +15,7 @@ def main():
         "By Actor" : magistrate,
         "By Price" : price,
         "By Neighborhood" : neighborhood,
-        "Race": race_gender
+        "By Demographics": race_gender
     }
     st.sidebar.title('Navigation')
     selection = st.sidebar.radio("Please select a page", list(PAGES.keys()))

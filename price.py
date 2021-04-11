@@ -16,7 +16,6 @@ def app():
     st.plotly_chart(f_year)
 
     st.title('Breakdown by Price')
-    st.write("In progress")
 
     # prepare data
     df_month = load_data()
