@@ -1,9 +1,17 @@
 import streamlit as st
 from PIL import Image
+import plotly.graph_objs as go
+from year_summary import plot_year_summary
 
 def app():
     st.image('figures/PBF_logo_edit.png', use_column_width = True)
     
+    # year-end summary
+    fig = plot_year_summary()
+    f_year = go.FigureWidget(fig)
+    st.plotly_chart(f_year)
+
+
     # What is this app
     st.title('Bail in Philadelphia, 2020')
     st.write("This dashboard provides a summary of the bail situation in Philadelphia in 2020. \

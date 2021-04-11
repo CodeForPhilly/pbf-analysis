@@ -4,6 +4,7 @@ import datetime
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 from PIL import Image
+from year_summary import plot_year_summary
 
 @st.cache(allow_output_mutation = True)
 def load_data():
@@ -14,6 +15,11 @@ def load_data():
 
 # st.set_page_config(layout="wide")
 def app():
+    # year-end summary
+    fig = plot_year_summary()
+    f_year = go.FigureWidget(fig)
+    st.plotly_chart(f_year)
+
     st.title('Year-end Summary')
     st.write('This section provides a general year-end summary of bail in Philadelphia in 2020, including trends and aggregate-level information for case counts, bail types, and monetary bail set and posted.')
 
