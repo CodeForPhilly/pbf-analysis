@@ -148,3 +148,30 @@ def app():
     
     col2.plotly_chart(acs_map_fig)
     
+    col11, col21 = st.beta_columns(2)
+    
+    zip_input = col11.text_input('Enter your zip code:')
+    
+    if zip_input:
+        st.header('Bail Summary for ' + zip_input)
+        temp_df = pd.DataFrame(
+            {
+                'Metric': ['<b>Case Count</b>', '<b>Total Bail Set ($)</b>', '<b>Total Bail Posted ($)</b>', '<b>Bail Posting Rate</b>'],
+                'Value': [case_counts[case_counts['zip']==int(zip_input)]['count'].values[0],
+                        bail_amounts[bail_amounts['zip']==int(zip_input)]['bail_amount'].values[0],
+                        bail_paid[bail_paid['zip']==int(zip_input)]['bail_paid'].values[0],
+                        bail_paid_pct[bail_paid_pct['zip']==int(zip_input)]['pct'].values[0]]
+            }
+        )
+        tbl_fig = go.Figure(data=[go.Table(
+            columnwidth = [400,200],
+            header=dict(values=['',''],
+                fill_color='white',
+                align='left'),
+            cells=dict(values=[temp_df['Metric'], temp_df['Value']],
+               fill_color='lavender',
+               font = dict(color='black', family='Arial', size=24),
+               align=['left', 'right']))
+        ])
+        tbl_fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, width=600)
+        st.plotly_chart(tbl_fig)
