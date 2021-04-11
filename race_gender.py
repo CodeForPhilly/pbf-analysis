@@ -2,10 +2,16 @@ import streamlit as st
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 from PIL import Image
+from year_summary import plot_year_summary
 
 imgWidth = 450
 
 def app():
+    # year-end summary
+    fig = plot_year_summary()
+    f_year = go.FigureWidget(fig)
+    st.plotly_chart(f_year)
+
     st.title('Breakdown by Race')
     
     # ----------------------------------------

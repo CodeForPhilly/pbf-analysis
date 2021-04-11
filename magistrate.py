@@ -3,6 +3,7 @@ from PIL import Image
 import pandas as pd
 import numpy as np
 import plotly.graph_objs as go
+from year_summary import plot_year_summary
 
 @st.cache()
 def load_data():
@@ -11,6 +12,11 @@ def load_data():
     return df_2020, df_2021
 
 def app():
+
+    # year-end summary
+    fig = plot_year_summary()
+    f_year = go.FigureWidget(fig)
+    st.plotly_chart(f_year)
 
     st.title('Breakdown by Actor')
     st.write('This section provides a summary of how bail type and bail amount depend on the person setting the bail (hereby referred to as the actor).')

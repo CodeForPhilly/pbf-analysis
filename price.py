@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.graph_objs as go
+from year_summary import plot_year_summary
 
 @st.cache()
 def load_data():
@@ -9,6 +10,11 @@ def load_data():
     return df_month
 
 def app():
+    # year-end summary
+    fig = plot_year_summary()
+    f_year = go.FigureWidget(fig)
+    st.plotly_chart(f_year)
+
     st.title('Breakdown by Price')
     st.write("In progress")
 
@@ -122,5 +128,4 @@ def app():
         ])
 
     f2 = go.FigureWidget(fig)
-    _, col, _ = st.beta_columns([1, 15, 1])
-    col.plotly_chart(f2)
+    st.plotly_chart(f2)

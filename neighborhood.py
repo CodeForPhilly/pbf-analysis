@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import json
 import plotly.graph_objs as go
-#from preprocess import preprocess, preprocess_acs
+from year_summary import plot_year_summary
 
 INCOME = '''
 https://data.census.gov/cedsci/table?g=8600000US19102,19103,19104,19106,19107,19109,19111,19112,19114,19115,19116,19118,19119,19120,19121,19122,19123,19124,19125,19126,19127,19128,19129,19130,19131,19132,19133,19134,19135,19136,19137,19138,19139,19140,19141,19142,19143,19144,19145,19146,19147,19148,19149,19150,19151,19152,19153,19154&tid=ACSST5Y2018.S1901&hidePreview=true
@@ -45,6 +45,13 @@ def preprocess_acs():
     return acs_df
 
 def app():
+    # year-end summary
+    fig = plot_year_summary()
+    f_year = go.FigureWidget(fig)
+    st.plotly_chart(f_year)
+
+    st.title('Breakdown by Race')
+
     st.title('Breakdown by Neighborhood')
     st.write('This section provides an interactive breakdown of case counts, total amounts of bail set and paid, and bail payment rate by Philadelphia zip code, in tandem with income, poverty, and unemployment data from the American Community Survey (ACS) collected by the U.S. Census Bureau.')
     st.markdown(f"""
