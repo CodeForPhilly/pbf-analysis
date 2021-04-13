@@ -155,6 +155,8 @@ def app():
             For the year 2020, we selected 10 actors that handled the highest number of cases. \
             For the year 2021, we summarize the data upto March 31, 2021. \
             Hover your mouse over the figure for further details.")
+
+    st.write("**<font color='red'>Note to PBF</font>**: For every case in which bail was denied, there was no magistrate information found. Is this correct? ", unsafe_allow_html=True)
     ##### 2020 Summary plots #####
 
     # Explain selection of magistrates (Those who handled more than 500 cases)
@@ -185,6 +187,78 @@ def app():
 
     # bail amount
     st.subheader("Comparison of bail amount")
+
+    df_monetary = pd.read_csv("data/cleaned/app_magistrate_amount.csv", index_col = 0)
+    df_monetary_2020 = df_monetary[df_monetary["year"] == 2020]
+    df_monetary_2021 = df_monetary[df_monetary["year"] == 2021]
+
+    names_2020 = df_monetary_2020.groupby("magistrate")["bail_amount"].median().sort_values()
+    names_2021 = df_monetary_2021.groupby("magistrate")["bail_amount"].median().sort_values()
+
+    fig = go.Figure()
+
+    # add traces for 2020
+    for name in names_2020.index:
+        data = df_monetary_2020[df_monetary_2020["magistrate"] == name].bail_amount
+        fig.add_trace(go.Box(x = data, 
+                            name = name.split(',')[0],
+                            hoverinfo = 'skip'))
+        
+        
+    # add traces for 2021
+    for name in names_2021.index:
+        data = df_monetary_2021[df_monetary_2021["magistrate"] == name].bail_amount
+        fig.add_trace(go.Box(x = data,
+                            name = name.split(',')[0],
+                            hoverinfo = 'skip',
+                            visible = False))
+
+        
+    # update
+    fig.update_layout(
+        updatemenus=[
+            dict(
+                active=0,
+                x = -0.5,
+                xanchor = 'left',
+                y = 0.9,
+                yanchor = 'top',
+                buttons=list([
+                    dict(label="2020",
+                        method="update",
+                        args=[{"visible": [True]*len(names_2020) + [False] * len(names_2021)},
+                            {"title": "Bail amount by actor in 2020"}]),
+                    dict(label="2021",
+                        method="update",
+                        args=[{"visible": [False]*len(names_2020) + [True] * len(names_2021)},
+                            {"title": "Bail amount by actor in 2021"}])
+                ]),
+            )
+            
+        ])
+        
+    fig.update_layout(xaxis_range=[0,300000],
+                    showlegend = False,
+                    title = "Bail amount by actor in 2020",
+                    xaxis_title="amount",
+                    yaxis_title="actor",
+                    annotations=[
+                                 dict(text="Select year", x=-0.5, xref="paper", y=0.98, yref="paper",
+                                 align="left", showarrow=False)
+        ])
+    f3 = go.FigureWidget(fig)
+    st.plotly_chart(f3) 
+        
+        
+    fig.update_layout(xaxis_range=[0,300000],
+                    showlegend = False,
+                    title = "Bail amount by actor in 2020",
+                    xaxis_title="amount",
+                    yaxis_title="actor")
+
+
+
+
     image = Image.open('figures/magistrate_amount_summary.png')
     _, col, _ = st.beta_columns([1, 5, 1])
     col.image(image, use_column_width = True)

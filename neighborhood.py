@@ -50,8 +50,6 @@ def app():
     f_year = go.FigureWidget(fig)
     st.plotly_chart(f_year)
 
-    st.title('Breakdown by Race')
-
     st.title('Breakdown by Neighborhood')
     st.write('This section provides an interactive breakdown of case counts, total amounts of bail set and paid, and bail payment rate by Philadelphia zip code, in tandem with income, poverty, and unemployment data from the American Community Survey (ACS) collected by the U.S. Census Bureau.')
     st.markdown(f"""
@@ -63,7 +61,6 @@ def app():
     Hover over an area to view the corresponding metric value and zip code number.\
     For bail metrics other than case counts, only zip codes with at least 100 cases are shown.')
     st.write('Zip codes with the highest case counts, highest total bail amounts set and posted, and lowest bail posting rates tend to have lower median incomes and higher poverty and unemployment rates.')
-    st.write("**<font color='red'>Question for PBF</font>**: are there any other bail metrics you'd be interested in viewing in this map?", unsafe_allow_html=True)
     
     col1, col2 = st.beta_columns(2)
     
