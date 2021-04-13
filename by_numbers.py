@@ -70,7 +70,7 @@ The most frequently set bail type in 2020 was monetary bail.""")
         legend_title="Bail Types",
         title="Breakdown of Bail Types Set: Percentages",
         xaxis_title="Year",
-        yaxis_title="Number of People",
+        yaxis_title="Percent",
         xaxis_tickvals=[0, 1],
         xaxis_ticktext=["2020","2021 YTD"]
     )
