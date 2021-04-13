@@ -19,15 +19,28 @@ def app():
     f_year = go.FigureWidget(fig)
     st.plotly_chart(f_year)
 
+    # ----------------------------------
+    #  Description
+    # ----------------------------------    
     st.title('Breakdown by Numbers')
 
+    st.write("""During a defendant's arraignment (a hearing held shortly after they are arrested), one of several [types of bail](https://www.pacodeandbulletin.gov/Display/pacode?file=/secure/pacode/data/234/chapter5/s524.html) may be set:
+- **monetary**, where a bail amount is set and the defendant is held in jail until a portion (typically 10%) is paid (\"posted\"),
+- **unsecured**, where the defendant is liable for a set bail amount if they do not show up to future court proceedings,
+- **ROR** (“released on own recognizance”), where a defendant must agree to show up to all future court proceedings,
+- a **nonmonetary** bail condition, or
+- the defendant may be **denied** bail.
+The most frequently set bail type in 2020 was monetary bail.""")        
+    
+    # ----------------------------------
+    #  Preprocessing
+    # ----------------------------------
     bail_types = ['Denied', 'Monetary', 'Unsecured', 'Nonmonetary', 'ROR']
     years = [2020, 2021]
     df_month = load_data()
     df_year = df_month.groupby(['bail_year', 'bail_type'])['count'].sum()
     yearly_sums = [df_year[x].sum() for x in years]
     arr_year_pct = np.array([100*df_year[val]/yearly_sums[i] for i, val in enumerate(years)])
-    print(arr_year_pct)
     
     # ----------------------------------
     #  Interactive figure: Bail Type Percentages
@@ -45,14 +58,14 @@ def app():
                 textposition="inside",
                 name=bailType,
                 hoverinfo="text",
-                hovertext=[f"{bailType}: {bailPct}% of {year} total"]
+                hovertext=[f"{bailType}: {bailPct:.1f}% of {year} total"]
             ))
 
     fig.update_layout(
         barmode='stack',
         legend={'traceorder': 'normal'},
         legend_title="Bail Types",
-        title="Breakdown of Bail Types Set: Totals",
+        title="Breakdown of Bail Types Set: Percentages",
         xaxis_title="Year",
         yaxis_title="Number of People",
         xaxis_tickvals=[0, 1],
@@ -79,7 +92,7 @@ def app():
                 textposition="inside",
                 name=bailType,
                 hoverinfo="text",
-                hovertext=[f"{bailType} bail in {year}: {bailCount} people"]
+                hovertext=[f"{bailType} bail in {year}: {bailCount:,d} people"]
             ))
 
     fig.update_layout(
@@ -95,3 +108,4 @@ def app():
 
     f_total = go.FigureWidget(fig)
     st.plotly_chart(f_total)
+    
