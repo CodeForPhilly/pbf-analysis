@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 import home
-import aggregate
+import by_numbers
 import magistrate
 import price
 import neighborhood
@@ -11,7 +11,7 @@ import race_gender
 def main():
     PAGES = {
         "Home": home,
-        "Summary" : aggregate,
+        "By Numbers" : by_numbers,
         "By Actor" : magistrate,
         "By Price" : price,
         "By Neighborhood" : neighborhood,
