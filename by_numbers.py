@@ -82,10 +82,10 @@ The most frequently set bail type in 2020 was monetary bail.""")
     fig = go.Figure()
     
     for bailType in bail_types:
-        for i, year in enumerate(years):
-            bailCount = df_year[year][bailType]
-            fig.add_trace(go.Bar(
-                x=[i],
+        year = 2020
+        bailCount = df_year[year][bailType]
+        fig.add_trace(go.Bar(
+                x=[0],
                 y=[bailCount],
                 orientation="v",
                 text="",
@@ -93,7 +93,21 @@ The most frequently set bail type in 2020 was monetary bail.""")
                 name=bailType,
                 hoverinfo="text",
                 hovertext=[f"{bailType} bail in {year}: {bailCount:,d} people"]
-            ))
+        ))
+
+        year = 2021
+        bailCount = df_year[year][bailType]
+        fig.add_trace(go.Bar(
+                x=[1],
+                y=[bailCount],
+                orientation="v",
+                text="",
+                textposition="inside",
+                name=bailType,
+                hoverinfo="text",
+                hovertext=[f"{bailType} bail in {year}: {bailCount:,d} people"]
+        ))        
+        
 
     fig.update_layout(
         barmode='stack',
