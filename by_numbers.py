@@ -7,8 +7,9 @@ from year_summary import plot_year_summary
 
 @st.cache()
 def load_data():
-    df = pd.read_csv('data/cleaned/app_bail_type.csv')
-    return df
+    df_bail_type = pd.read_csv('data/cleaned/app_bail_type.csv')
+    df_by_numbers = pd.read_csv('data/cleaned/app_by_numbers.csv')
+    return df_bail_type, df_by_numbers
 
 def app():
 
@@ -37,7 +38,7 @@ The most frequently set bail type in 2020 was monetary bail.""")
     # ----------------------------------
     bail_types = ['Denied', 'Monetary', 'Nonmonetary', 'ROR', 'Unsecured']
     years = [2020, 2021]
-    df_month = load_data()
+    df_month, df_by_numbers = load_data()
     df_year = df_month.groupby(['bail_year', 'bail_type'])['count'].sum()
     # TODO: update so that df is sorted according to bail_types, to match bail type colors/orders accross pages! Currently, bail_types must be set to match the groupby order by hand.
 
@@ -111,4 +112,16 @@ The most frequently set bail type in 2020 was monetary bail.""")
 
     f_total = go.FigureWidget(fig)
     st.plotly_chart(f_total)
+    
+    # ----------------------------------
+    #  Summary table
+    # ----------------------------------  
+    # TODO: fix formatting
+    #df_by_numbers['Percentage of Cases'] = df_by_numbers['Percentage of Cases'].map('{:.1f}%'.format)
+    #df_by_numbers['People Impacted'] = df_by_numbers['People Impacted'].map('{:,.0f}'.format)
+    #df_by_numbers['Total Bail Set'] = df_by_numbers['Total Bail Set'].map('${:,.0f}'.format)
+    #df_by_numbers['Median Bail Set'] = df_by_numbers['Median Bail Set'].map('${:,.0f}'.format)
+    #df_by_numbers['Median Bail Paid'] = df_by_numbers['Median Bail Paid'].map('${:,.0f}'.format)
+    st.table(df_by_numbers)
+    
     
