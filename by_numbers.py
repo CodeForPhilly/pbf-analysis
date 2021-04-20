@@ -9,6 +9,15 @@ from year_summary import plot_year_summary
 def load_data():
     df_bail_type = pd.read_csv('data/cleaned/app_bail_type.csv')
     df_by_numbers = pd.read_csv('data/cleaned/app_by_numbers.csv')
+    
+    df_by_numbers['Percentage of Cases'] = df_by_numbers['Percentage of Cases'].map('{:.1f}%'.format)
+    df_by_numbers['People Impacted'] = df_by_numbers['People Impacted'].map('{:,.0f}'.format)
+    df_by_numbers['Total Bail Set'] = df_by_numbers['Total Bail Set'].map('${:,.0f}'.format)
+    df_by_numbers['Median Bail Set'] = df_by_numbers['Median Bail Set'].map('${:,.0f}'.format)
+    df_by_numbers['Median Bail Paid (all cases)'] = df_by_numbers['Median Bail Paid (all cases)'].map('${:,.0f}'.format)
+    df_by_numbers['Median Bail Paid (when more than $0 was paid)'] = df_by_numbers['Median Bail Paid (when more than $0 was paid)'].map('${:,.0f}'.format)
+    df_by_numbers.set_index('Year', inplace=True)
+    
     return df_bail_type, df_by_numbers
 
 def app():
@@ -23,15 +32,17 @@ def app():
     # ----------------------------------
     #  Description
     # ----------------------------------    
-    st.title('Breakdown by Numbers')
+    st.title('Breakdown by Year')
 
+    st.subheader("Bail Types")
+    
     st.write("""During a defendant's arraignment (a hearing held shortly after they are arrested), one of several [types of bail](https://www.pacodeandbulletin.gov/Display/pacode?file=/secure/pacode/data/234/chapter5/s524.html) may be set:
 - **monetary**, where a bail amount is set and the defendant is held in jail until a portion (typically 10%) is paid (\"posted\"),
 - **ROR** (“released on own recognizance”), where a defendant must agree to show up to all future court proceedings,
 - **unsecured**, where the defendant is liable for a set bail amount if they do not show up to future court proceedings,
 - a **nonmonetary** bail condition, or
-- the defendant may be **denied** bail.
-The most frequently set bail type in 2020 was monetary bail.""")        
+- the defendant may be **denied** bail.""")
+    st.write("Monetary bail is the most frequently set bail type.")        
     
     # ----------------------------------
     #  Preprocessing
@@ -95,7 +106,7 @@ The most frequently set bail type in 2020 was monetary bail.""")
                 textposition="inside",
                 name=bailType,
                 hoverinfo="text",
-                hovertext=[f"{bailType}: {bailCount:.1f}% of {year} total"
+                hovertext=[f"{bailType}: {bailCount:,d} people in {year}"
                            for bailCount, year in zip(bail_total, years)]
         ))             
 
@@ -116,12 +127,10 @@ The most frequently set bail type in 2020 was monetary bail.""")
     # ----------------------------------
     #  Summary table
     # ----------------------------------  
-    # TODO: fix formatting
-    #df_by_numbers['Percentage of Cases'] = df_by_numbers['Percentage of Cases'].map('{:.1f}%'.format)
-    #df_by_numbers['People Impacted'] = df_by_numbers['People Impacted'].map('{:,.0f}'.format)
-    #df_by_numbers['Total Bail Set'] = df_by_numbers['Total Bail Set'].map('${:,.0f}'.format)
-    #df_by_numbers['Median Bail Set'] = df_by_numbers['Median Bail Set'].map('${:,.0f}'.format)
-    #df_by_numbers['Median Bail Paid'] = df_by_numbers['Median Bail Paid'].map('${:,.0f}'.format)
+
+    st.subheader("Monetary Bail")
+    st.write("""In 2020 cases where monetary bail was set, bail was posted in only 44% of cases, meaning that **a majority of people were not able to pay the amount required to be released from jail**.""")
+    
     st.table(df_by_numbers)
     
     

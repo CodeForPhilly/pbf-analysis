@@ -1,3 +1,3 @@
-Year,Percentage of Cases,People Impacted,Total Bail Set,Median Bail Set,Median Bail Paid
-2020.0,48.76306116548961,11807.0,1392303093.0,40000.0,0.0
-2021.0,54.08857190247139,3261.0,479097347.0,50000.0,0.0
+Year,Percentage of Cases,People Impacted,Total Bail Set,Median Bail Set,Median Bail Paid (all cases),Median Bail Paid (when more than $0 was paid)
+2020.0,48.76306116548961,11807.0,1392303093.0,40000.0,0.0,2500.0
+2021.0,54.08857190247139,3261.0,479097347.0,50000.0,0.0,2500.0
