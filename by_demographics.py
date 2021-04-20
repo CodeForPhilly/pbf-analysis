@@ -5,28 +5,44 @@ import numpy as np
 import plotly.graph_objs as go
 from year_summary import plot_year_summary
 
+def format_df_amount(df, category):
+    """Group bail amount set by columns (retaining "empty" groups)."""
+    return df.groupby(['bail_year', category])['bail_amount_sum'].sum().unstack(fill_value=0).stack()
+
+def format_df_type(df, category, flag):
+    """Group bail types set by columns (retaining "empty" groups). 
+    flag must be 'count' (for total number of people) or 'pct' (for percentage of people in a given category)"""
+    return df.groupby(['bail_year', category, 'bail_type'])[f'bail_type_{flag}'].sum().unstack(fill_value=0).stack()    
+
 @st.cache()
 def load_race_data():
-    df_race_bail_set = pd.read_csv('data/cleaned/app_race_bail_set.csv')
-    df_race_bail_set = df_race_bail_set.groupby(['bail_year', 'race_group'])['bail_amount_sum'].sum().unstack(fill_value=0).stack()
-    df_race_bail_type = pd.read_csv('data/cleaned/app_race_bail_type.csv')
-    df_race_bail_type = df_race_bail_type.groupby(['bail_year', 'race_group', 'bail_type'])['bail_type_pct'].sum().unstack(fill_value=0).stack()
-    return df_race_bail_set, df_race_bail_type
+    category = 'race_group'
+    df_bail_set = pd.read_csv('data/cleaned/app_race_bail_set.csv')
+    df_bail_type = pd.read_csv('data/cleaned/app_race_bail_type.csv')
+    df_bail_set = format_df_amount(df_bail_set, category)
+    df_bail_type_pct = format_df_type(df_bail_type, category, 'pct')
+    df_bail_type_count = format_df_type(df_bail_type, category, 'count')
+    return df_bail_set, df_bail_type_pct, df_bail_type_count
 
 @st.cache()
 def load_sex_data():
+    category = 'sex'
     df_bail_set = pd.read_csv('data/cleaned/app_sex_bail_set.csv')
-    df_bail_set = df_bail_set.groupby(['bail_year', 'sex'])['bail_amount_sum'].sum().unstack(fill_value=0).stack()
     df_bail_type = pd.read_csv('data/cleaned/app_sex_bail_type.csv')
-    df_bail_type = df_bail_type.groupby(['bail_year', 'sex', 'bail_type'])['bail_type_pct'].sum().unstack(fill_value=0).stack()
-    return df_bail_set, df_bail_type
+    df_bail_set = format_df_amount(df_bail_set, category)
+    df_bail_type_pct = format_df_type(df_bail_type, category, 'pct')
+    df_bail_type_count = format_df_type(df_bail_type, category, 'count')
+    return df_bail_set, df_bail_type_pct, df_bail_type_count
 
+@st.cache()
 def load_age_data():
+    category = 'age_group'
     df_bail_set = pd.read_csv('data/cleaned/app_age_bail_set.csv')
-    df_bail_set = df_bail_set.groupby(['bail_year', 'age_group'])['bail_amount_sum'].sum().unstack(fill_value=0).stack()
     df_bail_type = pd.read_csv('data/cleaned/app_age_bail_type.csv')
-    df_bail_type = df_bail_type.groupby(['bail_year', 'age_group', 'bail_type'])['bail_type_pct'].sum().unstack(fill_value=0).stack()
-    return df_bail_set, df_bail_type
+    df_bail_set = format_df_amount(df_bail_set, category)
+    df_bail_type_pct = format_df_type(df_bail_type, category, 'pct')
+    df_bail_type_count = format_df_type(df_bail_type, category, 'count')
+    return df_bail_set, df_bail_type_pct, df_bail_type_count
 
 def app():
 
@@ -45,25 +61,30 @@ def app():
     # ----------------------------------
     #  Preprocessing
     # ----------------------------------
-    bail_types = ['Denied', 'Monetary', 'Nonmonetary', 'ROR', 'Unsecured']
     years = [2020, 2021]
+    bail_types = ['Denied', 'Monetary', 'Nonmonetary', 'ROR', 'Unsecured']
     races = ['Black', 'White', 'Other']
     sexes = ['Male', 'Female']
     age_groups = ['minor', '18 to 25', '26 to 64', '65+']
                            
-    df_race_bail_set, df_race_bail_type = load_race_data()
-    df_sex_bail_set, df_sex_bail_type = load_sex_data()
-    df_age_bail_set, df_age_bail_type = load_age_data()  
-    print(df_age_bail_type)
+    df_race_bail_set, df_race_bail_type, df_race_bail_type_count = load_race_data()
+    df_sex_bail_set, df_sex_bail_type, df_sex_bail_type_count = load_sex_data()
+    df_age_bail_set, df_age_bail_type, df_age_bail_type_count = load_age_data()  
     
     arr_race_pct_2020 = np.array([df_race_bail_type[2020][race] for race in races], dtype=object)
     arr_race_pct_2021 = np.array([df_race_bail_type[2021][race] for race in races], dtype=object)
-
+    arr_race_count_2020 = np.array([df_race_bail_type_count[2020][race] for race in races], dtype=object)
+    arr_race_count_2021 = np.array([df_race_bail_type_count[2021][race] for race in races], dtype=object)
+    
     arr_sex_pct_2020 = np.array([df_sex_bail_type[2020][sex] for sex in sexes], dtype=object)
     arr_sex_pct_2021 = np.array([df_sex_bail_type[2021][sex] for sex in sexes], dtype=object)
-
+    arr_sex_count_2020 = np.array([df_sex_bail_type_count[2020][sex] for sex in sexes], dtype=object)
+    arr_sex_count_2021 = np.array([df_sex_bail_type_count[2021][sex] for sex in sexes], dtype=object)
+    
     arr_age_pct_2020 = np.array([df_age_bail_type[2020][age] for age in age_groups], dtype=object)
     arr_age_pct_2021 = np.array([df_age_bail_type[2021][age] for age in age_groups], dtype=object)    
+    arr_age_count_2020 = np.array([df_age_bail_type_count[2020][age] for age in age_groups], dtype=object)
+    arr_age_count_2021 = np.array([df_age_bail_type_count[2021][age] for age in age_groups], dtype=object)
     
     # ----------------------------------
     #  Interactive figure: Bail Type Percentages by Race
@@ -71,7 +92,8 @@ def app():
     fig = go.Figure()
     
     for j, bailType in enumerate(bail_types):
-        bail_pct = arr_race_pct_2020[:, j]#[row[row['bail_type'] == bailType] for row in arr_race_pct_2020]
+        bail_pct = arr_race_pct_2020[:, j]
+        bail_count = arr_race_count_2020[:, j]
         fig.add_trace(go.Bar(
                 x=list(range(len(races))),
                 y=bail_pct,
@@ -80,12 +102,13 @@ def app():
                 textposition="inside",
                 name=bailType,
                 hoverinfo="text",
-                hovertext=[f"{bailType}: {bailPct:.1f}% of 2020 total, {race}"
-                           for bailPct, race in zip(bail_pct, races)]
+                hovertext=[f"{bailType}: {bailPct:.1f}% of 2020 total, {race} ({count:,d} people)"
+                           for bailPct, race, count in zip(bail_pct, races, bail_count)]
         ))
     
     for j, bailType in enumerate(bail_types):
         bail_pct = arr_race_pct_2021[:, j]
+        bail_count = arr_race_count_2020[:, j]
         fig.add_trace(go.Bar(
                 x=list(range(len(races))),
                 y=bail_pct,
@@ -94,8 +117,8 @@ def app():
                 textposition="inside",
                 name=bailType,
                 hoverinfo="text",
-                hovertext=[f"{bailType}: {bailPct:.1f}% of 2021 total for {race}"
-                           for bailPct, race in zip(bail_pct, races)],
+                hovertext=[f"{bailType}: {bailPct:.1f}% of 2021 total, {race} ({count:,d} people)"
+                           for bailPct, race, count in zip(bail_pct, races, bail_count)],
                 visible=False
         ))
 
@@ -103,7 +126,7 @@ def app():
         barmode='stack',
         legend={'traceorder': 'normal'},
         legend_title="Bail Types",
-        title="Breakdown of Bail Types Set by Race: Percentages",
+        title="Breakdown of Bail Types Set, by Race",
         xaxis_title="Race",
         yaxis_title="Percent",
         xaxis_tickvals=list(range(len(races))),
@@ -138,6 +161,11 @@ def app():
     
     f_pct = go.FigureWidget(fig)
     st.plotly_chart(f_pct)    
+
+    st.write("In 2020, monetary bail was set more frequently for people identified by the court system as Black than those identified as non-Black (White or Other).")    
+    
+    st.write("Note: While additional race categories beyond \"White\" and \"Black\" are recognized by the Pennsylvania court system, these are grouped together as \"Other\" out of anonymization concerns. The Philadelphia Bail Fund has observed that the Philadelphia court system appears to record most non-Black and non-Asian people, such as Latinx and Indigenous people, as White.")
+    st.write("**<font color='red'>Question for PBF</font>**: what disclaimer language would you like to include here? The above was informed by the language in the July 2020 report.", unsafe_allow_html=True)    
     
     # ----------------------------------
     #  Interactive figure: Bail Type Percentages by Sex
@@ -146,6 +174,7 @@ def app():
     
     for j, bailType in enumerate(bail_types):
         bail_pct = arr_sex_pct_2020[:, j]
+        bail_count = arr_sex_count_2020[:, j]
         fig.add_trace(go.Bar(
                 x=list(range(len(sexes))),
                 y=bail_pct,
@@ -154,12 +183,13 @@ def app():
                 textposition="inside",
                 name=bailType,
                 hoverinfo="text",
-                hovertext=[f"{bailType}: {bailPct:.1f}% of 2020 total, {sex}"
-                           for bailPct, sex in zip(bail_pct, sexes)]
+                hovertext=[f"{bailType}: {bailPct:.1f}% of 2020 total, {sex} ({count:,d} people)"
+                           for bailPct, sex, count in zip(bail_pct, sexes, bail_count)]
         ))
 
     for j, bailType in enumerate(bail_types):
         bail_pct = arr_sex_pct_2021[:, j]
+        bail_count = arr_sex_count_2021[:, j]
         fig.add_trace(go.Bar(
                 x=list(range(len(sexes))),
                 y=bail_pct,
@@ -168,8 +198,8 @@ def app():
                 textposition="inside",
                 name=bailType,
                 hoverinfo="text",
-                hovertext=[f"{bailType}: {bailPct:.1f}% of 2021 total for {sex}"
-                           for bailPct, sex in zip(bail_pct, sexes)],
+                hovertext=[f"{bailType}: {bailPct:.1f}% of 2021 total for {sex} ({count:,d} people)"
+                           for bailPct, sex, count in zip(bail_pct, sexes, bail_count)],
                 visible=False
         ))
 
@@ -177,9 +207,9 @@ def app():
         barmode='stack',
         legend={'traceorder': 'normal'},
         legend_title="Bail Types",
-        title="Breakdown of Bail Types Set by Sex: Percentages",
-        xaxis_title="Race",
-        yaxis_title="Sex",
+        title="Breakdown of Bail Types Set, by Sex",
+        xaxis_title="Sex",
+        yaxis_title="Percent",
         xaxis_tickvals=list(range(len(sexes))),
         xaxis_ticktext=sexes
     )
@@ -213,6 +243,8 @@ def app():
     f_pct_sex = go.FigureWidget(fig)
     st.plotly_chart(f_pct_sex)    
 
+    st.write("In 2020, monetary bail was set more frequently for people identified by the court system as male than those identified as female.")
+    
     # ----------------------------------
     #  Interactive figure: Bail Type Percentages by Age
     # ----------------------------------    
@@ -220,6 +252,7 @@ def app():
     
     for j, bailType in enumerate(bail_types):
         bail_pct = arr_age_pct_2020[:, j]
+        bail_count = arr_age_count_2020[:, j]
         fig.add_trace(go.Bar(
                 x=list(range(len(age_groups))),
                 y=bail_pct,
@@ -228,12 +261,13 @@ def app():
                 textposition="inside",
                 name=bailType,
                 hoverinfo="text",
-                hovertext=[f"{bailType}: {bailPct:.1f}% of 2020 total, {age}"
-                           for bailPct, age in zip(bail_pct, age_groups)]
+                hovertext=[f"{bailType}: {bailPct:.1f}% of 2020 total, {age} ({count:,d} people)"
+                           for bailPct, age, count in zip(bail_pct, age_groups, bail_count)]
         ))
 
     for j, bailType in enumerate(bail_types):
         bail_pct = arr_age_pct_2021[:, j]
+        bail_count = arr_age_count_2021[:, j]
         fig.add_trace(go.Bar(
                 x=list(range(len(age_groups))),
                 y=bail_pct,
@@ -242,8 +276,8 @@ def app():
                 textposition="inside",
                 name=bailType,
                 hoverinfo="text",
-                hovertext=[f"{bailType}: {bailPct:.1f}% of 2021 total for {age}"
-                           for bailPct, age in zip(bail_pct, age_groups)],
+                hovertext=[f"{bailType}: {bailPct:.1f}% of 2021 total for {age} ({count:,d} people)"
+                           for bailPct, age, count in zip(bail_pct, age_groups, bail_count)],
                 visible=False
         ))
 
@@ -251,9 +285,9 @@ def app():
         barmode='stack',
         legend={'traceorder': 'normal'},
         legend_title="Bail Types",
-        title="Breakdown of Bail Types Set by Age: Percentages",
-        xaxis_title="Race",
-        yaxis_title="Age Group",
+        title="Breakdown of Bail Types Set, by Age",
+        xaxis_title="Age Group",
+        yaxis_title="Percent",
         xaxis_tickvals=list(range(len(age_groups))),
         xaxis_ticktext=age_groups
     )
@@ -287,3 +321,4 @@ def app():
     f_pct_age = go.FigureWidget(fig)
     st.plotly_chart(f_pct_age)   
     
+    st.write("In 2020, the frequency of monetary bail being set decreased with increasing age group.") 
