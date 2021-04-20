@@ -7,6 +7,7 @@ import magistrate
 import price
 import neighborhood
 import race_gender
+import by_demographics
 
 def main():
     PAGES = {
@@ -15,7 +16,8 @@ def main():
         "By Actor" : magistrate,
         "By Price" : price,
         "By Neighborhood" : neighborhood,
-        "By Demographics": race_gender
+        "By Demographics (original)": race_gender,
+        "By Demographics": by_demographics
     }
     st.sidebar.title('Navigation')
     selection = st.sidebar.radio("Please select a page", list(PAGES.keys()))
