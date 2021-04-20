@@ -50,6 +50,8 @@ def app():
     f_year = go.FigureWidget(fig)
     st.plotly_chart(f_year)
 
+    minCount = 10 #100
+    
     st.title('Breakdown by Neighborhood')
     st.write('This section provides an interactive breakdown of case counts, total amounts of bail set and paid, and bail payment rate by Philadelphia zip code, in tandem with income, poverty, and unemployment data from the American Community Survey (ACS) collected by the U.S. Census Bureau.')
     st.markdown(f"""
@@ -57,9 +59,9 @@ def app():
         """)
     
     st.header('Interactive Maps')
-    st.write('Use the dropdown menus to select a given bail and census metric associated with each map.\
+    st.write(f'Use the dropdown menus to select a given bail and census metric associated with each map.\
     Hover over an area to view the corresponding metric value and zip code number.\
-    For bail metrics other than case counts, only zip codes with at least 100 cases are shown.')
+    For bail metrics other than case counts, only zip codes with at least {minCount} cases are shown.')
     st.write('Zip codes with the highest case counts, highest total bail amounts set and posted, and lowest bail posting rates tend to have lower median incomes and higher poverty and unemployment rates.')
     
     col1, col2 = st.beta_columns(2)
@@ -86,7 +88,6 @@ def app():
     #                 .reset_index().rename(columns={'index': 'zipcode', 'zip': 'pct'}))
         
     # Select only zip codes with at least minCount cases to show in bail metrics map
-    minCount = 100
     minZips = case_counts[case_counts['count'] >= minCount]['zip'].to_list()
     #case_counts = case_counts[case_counts['zip'].isin(minZips)]
     bail_amounts = bail_amounts[bail_amounts['zip'].isin(minZips)]
@@ -157,25 +158,27 @@ def app():
     zip_input = col11.text_input('Enter your zip code:')
     
     if zip_input:
-        st.header('Bail Summary for ' + zip_input)
-        temp_df = pd.DataFrame(
-            {
-                'Metric': ['<b>Case Count</b>', '<b>Total Bail Set ($)</b>', '<b>Total Bail Posted ($)</b>', '<b>Bail Posting Rate</b>'],
-                'Value': [case_counts[case_counts['zip']==int(zip_input)]['count'].values[0],
-                        bail_amounts[bail_amounts['zip']==int(zip_input)]['bail_amount'].values[0],
-                        bail_paid[bail_paid['zip']==int(zip_input)]['bail_paid'].values[0],
-                        bail_paid_pct[bail_paid_pct['zip']==int(zip_input)]['pct'].values[0]]
-            }
-        )
-        tbl_fig = go.Figure(data=[go.Table(
-            columnwidth = [400,200],
-            header=dict(values=['',''],
-                fill_color='white',
-                align='left'),
-            cells=dict(values=[temp_df['Metric'], temp_df['Value']],
-               fill_color='lavender',
-               font = dict(color='black', family='Arial', size=24),
-               align=['left', 'right']))
-        ])
-        tbl_fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, width=600)
-        st.plotly_chart(tbl_fig)
+        try:
+            st.header('Bail Summary for ' + zip_input)
+            temp_df = pd.DataFrame(
+                {'Metric': ['<b>Case Count</b>', '<b>Total Bail Set</b>', '<b>Total Bail Posted</b>', '<b>Bail Posting Rate</b>'],
+                 'Value': [case_counts[case_counts['zip']==int(zip_input)]['count'].values[0],
+                        f"${bail_amounts[bail_amounts['zip']==int(zip_input)]['bail_amount'].values[0]:,.0f}",
+                        f"${bail_paid[bail_paid['zip']==int(zip_input)]['bail_paid'].values[0]:,.0f}",
+                        f"{bail_paid_pct[bail_paid_pct['zip']==int(zip_input)]['pct'].values[0]:.0f}%"]
+                }
+            )
+            tbl_fig = go.Figure(data=[go.Table(
+                columnwidth = [400,200],
+                header=dict(values=['',''],
+                    fill_color='white',
+                    align='left'),
+                cells=dict(values=[temp_df['Metric'], temp_df['Value']],
+                   fill_color='lavender',
+                   font = dict(color='black', family='Arial', size=24),
+                   align=['left', 'right']))
+            ])
+            tbl_fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, width=600)
+            st.plotly_chart(tbl_fig)
+        except IndexError:
+            st.write("No information available for this zip code")
