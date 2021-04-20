@@ -12,7 +12,7 @@ import by_demographics
 def main():
     PAGES = {
         "Home": home,
-        "By Numbers" : by_numbers,
+        "By Year" : by_numbers,
         "By Actor" : magistrate,
         "By Price" : price,
         "By Neighborhood" : neighborhood,

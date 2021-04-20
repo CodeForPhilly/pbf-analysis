@@ -3,6 +3,14 @@ from PIL import Image
 import plotly.graph_objs as go
 from year_summary import plot_year_summary
 
+@st.cache()
+def load_data():
+    fname = 'data/cleaned/app_total_number.txt'
+    with open(fname, 'r') as f:
+        n_cases = int(f.readline())
+    
+    return n_cases
+
 def app():
     st.image('figures/PBF_logo_edit.png', use_column_width = True)
     
@@ -11,13 +19,18 @@ def app():
     f_year = go.FigureWidget(fig)
     st.plotly_chart(f_year)
 
+    n_cases = load_data()
 
     # What is this app
-    st.title('Bail in Philadelphia, 2020')
-    st.write("This dashboard provides a summary of the bail situation in Philadelphia in 2020. \
-        We provide a general year-end summary, along with breakdown by neighborhood, magistrate, and race.\
-        Please use the navigation panel on the left to select a page.")    
-    st.write("Information from the **24,225 cases** used to create this dashboard was gathered from [Philadelphia Municipal Court docket sheets.](https://ujsportal.pacourts.us/DocketSheets/MC.aspx#)")
+    st.title('Bail in Philadelphia')
+    st.write("""This dashboard provides a summary of the bail situation in Philadelphia **from January 2020 through March 2021**. A summary of how people in Philadelphia have been impacted by **monetary bail** is displayed at the top of each pages. You can also explore how bail breaks down...
+- ...by year: how have **bail types and bail amounts set** in 2021 compared to those set in 2020?
+- ...by actor: how has bail depended on the magistrate or other **person setting bail**?
+- ...by price: how much bail have Philadelphians across the city **paid**? 
+- ...by demographics: how has bail differed between **races, genders, and age groups**?
+
+Use the navigation panel on the left to explore.""")    
+    st.write(f"Information from the **{n_cases:,d} cases** used to create this dashboard was gathered from [Philadelphia Municipal Court docket sheets.](https://ujsportal.pacourts.us/DocketSheets/MC.aspx#)")
 
     # What is PBF 
     st.header('The Philadelphia Bail Fund')
