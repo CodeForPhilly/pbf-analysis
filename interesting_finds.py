@@ -6,6 +6,12 @@ import plotly.graph_objs as go
 from year_summary import plot_year_summary
 
 def app():
+
+    # year-end summary
+    fig = plot_year_summary()
+    f_year = go.FigureWidget(fig)
+    st.plotly_chart(f_year)
+
     ##### Comparison controling for offense types #####
 
     st.header("By actor analysis with controlled offense types")

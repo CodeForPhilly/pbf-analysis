@@ -20,7 +20,7 @@ def plot_year_summary():
     fig.add_trace(go.Indicator(
         mode = "number",
         value = df_summary.at[2020,"bail_amount"],
-        title = {"text": "<span style='font-size:1.6em'>Amount of bail set</span>"},
+        title = {"text": "<span style='font-size:1.5em'>Amount of bail set</span>"},
         number = {"prefix": "$",
                 "font":{"size": 30}},
         domain = {'x': [0.08, 0.31], 'y': [0.4, 1]}))
@@ -28,7 +28,7 @@ def plot_year_summary():
     fig.add_trace(go.Indicator(
         mode = "number",
         value = df_summary.at[2020,"bail_paid"],
-        title = {"text": "<span style='font-size:1.6em'>Amount of bail paid</span>"},
+        title = {"text": "<span style='font-size:1.5em'>Amount of bail paid</span>"},
         number = {"prefix": "$",
                 "font":{"size":30}},
         domain = {'x': [0.31, 0.54], 'y': [0.4, 1]}))
@@ -36,7 +36,7 @@ def plot_year_summary():
     fig.add_trace(go.Indicator(
         mode = "number",
         value = df_summary.at[2020, "monetary_bail_perct"]*100,
-        title = {"text": "<span style='font-size:1.6em'>Percentage of bail set</span>"},
+        title = {"text": "<span style='font-size:1.5em'>Percentage of bail set</span>"},
         number = {"suffix": "%",
                 "font":{"size":30}},
         domain = {'x': [0.54, 0.77], 'y': [0.4, 1]}))
@@ -44,7 +44,7 @@ def plot_year_summary():
     fig.add_trace(go.Indicator(
         mode = "number",
         value = df_summary.at[2020,"monetary_bail"],
-        title = {"text": "<span style='font-size:1.6em'>Number of people impacted</span>"},
+        title = {"text": "<span style='font-size:1.5em'>Number of people impacted</span>"},
         number = {
                 "font":{"size": 30}},
         domain = {'x': [0.77, 1], 'y': [0.4, 1]}))
