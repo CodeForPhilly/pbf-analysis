@@ -161,11 +161,14 @@ def app():
         try:
             st.header('Bail Summary for ' + zip_input)
             temp_df = pd.DataFrame(
-                {'Metric': ['<b>Case Count</b>', '<b>Total Bail Set</b>', '<b>Total Bail Posted</b>', '<b>Bail Posting Rate</b>'],
+                {'Metric': ['<b>Case Count</b>', '<b>Total Bail Set</b>', '<b>Total Bail Posted</b>', '<b>Bail Posting Rate</b>', '<b>Household Median Income</b>', '<b>Percent Below Poverty</b>', '<b>Unemployment Rate</b>'],
                  'Value': [case_counts[case_counts['zip']==int(zip_input)]['count'].values[0],
                         f"${bail_amounts[bail_amounts['zip']==int(zip_input)]['bail_amount'].values[0]:,.0f}",
                         f"${bail_paid[bail_paid['zip']==int(zip_input)]['bail_paid'].values[0]:,.0f}",
-                        f"{bail_paid_pct[bail_paid_pct['zip']==int(zip_input)]['pct'].values[0]:.0f}%"]
+                        f"{bail_paid_pct[bail_paid_pct['zip']==int(zip_input)]['pct'].values[0]:.0f}%",
+                        f"${acs_df[acs_df['zipcode']==int(zip_input)]['households_median_income'].values[0]:,.0f}",
+                        f"{acs_df[acs_df['zipcode']==int(zip_input)]['percent_below_poverty'].values[0]:.0f}%",
+                        f"{acs_df[acs_df['zipcode']==int(zip_input)]['unemployment_rate'].values[0]:.0f}%"]
                 }
             )
             tbl_fig = go.Figure(data=[go.Table(
