@@ -18,7 +18,6 @@ def main():
         "By Neighborhood" : neighborhood,
         "By Demographics (original)": race_gender,
         "By Demographics": by_demographics,
-        "Other interesting findings": interesting_finds,
         "About PBF": home,
     }
     st.sidebar.title('Navigation')
