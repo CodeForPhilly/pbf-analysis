@@ -54,6 +54,9 @@ def app():
     
     st.title('Breakdown by Neighborhood')
     st.write('This section provides an interactive breakdown of case counts, total amounts of bail set and paid, and bail payment rate by Philadelphia zip code, in tandem with income, poverty, and unemployment data from the American Community Survey (ACS) collected by the U.S. Census Bureau.')
+    
+    st.write('The plot on the left shows bail-related summary for each zipcode, while the plot on the right shows income, poverty level, and unemployment rate for each zipcode. One can see that the neighborhoods that are strongly affected by the bail system often correspond to neighborhoods with low income, high unemployment, and high poverty.')
+    
     st.markdown(f"""
     Source Data: [Median Income]({INCOME}), [Poverty Level]({POVERTY}), [Unemployment Rate]({UNEMPLOYMENT})
         """)
@@ -62,6 +65,7 @@ def app():
     st.write(f'Use the dropdown menus to select a given bail and census metric associated with each map.\
     Hover over an area to view the corresponding metric value and zip code number.\
     For bail metrics other than case counts, only zip codes with at least {minCount} cases are shown.')
+    
     st.write('Zip codes with the highest case counts, highest total bail amounts set and posted, and lowest bail posting rates tend to have lower median incomes and higher poverty and unemployment rates.')
     
     col1, col2 = st.beta_columns(2)
