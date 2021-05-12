@@ -34,15 +34,16 @@ def app():
     # ----------------------------------    
     st.title('Breakdown by Year')
 
-    st.subheader("Bail Types")
+    st.subheader('How have bail types set in 2021 compared to those set in 2020?')
     
     st.write("""During a defendant's arraignment (a hearing held shortly after they are arrested), one of several [types of bail](https://www.pacodeandbulletin.gov/Display/pacode?file=/secure/pacode/data/234/chapter5/s524.html) may be set:
 - **monetary**, where a bail amount is set and the defendant is held in jail until a portion (typically 10%) is paid (\"posted\"),
-- **ROR** (“released on own recognizance”), where a defendant must agree to show up to all future court proceedings,
+- **ROR** (“released on own recognizance”), where the defendant must agree to show up to all future court proceedings,
 - **unsecured**, where the defendant is liable for a set bail amount if they do not show up to future court proceedings,
 - a **nonmonetary** bail condition, or
-- the defendant may be **denied** bail.""")
-    st.write("Monetary bail is the most frequently set bail type.")        
+- the defendant may be **denied** bail.""")    
+    
+    st.write("In 2020 and so far in 2021, **monetary bail has been the most frequently set bail type**.")  
     
     # ----------------------------------
     #  Preprocessing
@@ -51,17 +52,24 @@ def app():
     years = [2020, 2021]
     df_month, df_by_numbers = load_data()
     df_year = df_month.groupby(['bail_year', 'bail_type'])['count'].sum()
+    df_monetary = df_month[df_month['bail_type'] == 'Monetary']
+    
     # TODO: update so that df is sorted according to bail_types, to match bail type colors/orders accross pages! Currently, bail_types must be set to match the groupby order by hand.
 
     arr_year_total = np.array([df_year[val] for val in years])
     yearly_sums = [df_year[x].sum() for x in years]
     arr_year_pct = np.array([100*df_year[val]/yearly_sums[i] for i, val in enumerate(years)])
+    gb_month = df_month.groupby(['bail_year', 'bail_month'])['count'].sum()
+    df_monetary['pct'] = df_monetary.apply(lambda row:
+                                           100*row['count']/gb_month[row['bail_year']][row['bail_month']],
+                                           axis=1)
     
     # ----------------------------------
-    #  Interactive figure: Bail Type Percentages
+    #  Interactive figure: bail type percentages/counts, yearly comparison
     # ----------------------------------
     fig = go.Figure()
     
+    # Plot percentages
     for j, bailType in enumerate(bail_types):
         bail_pct = arr_year_pct[:, j]
         fig.add_trace(go.Bar(
@@ -73,29 +81,11 @@ def app():
                 name=bailType,
                 hoverinfo="text",
                 hovertext=[f"{bailType}: {bailPct:.1f}% of {year} total"
-                           for bailPct, year in zip(bail_pct, years)]
+                           for bailPct, year in zip(bail_pct, years)],
+                visible=True
         ))
 
-    fig.update_layout(
-        barmode='stack',
-        legend={'traceorder': 'normal'},
-        legend_title="Bail Types",
-        title="Breakdown of Bail Types Set: Percentages",
-        xaxis_title="Year",
-        yaxis_title="Percent",
-        xaxis_tickvals=[0, 1],
-        xaxis_ticktext=["2020","2021 YTD"]
-    )
-
-    f_pct = go.FigureWidget(fig)
-    st.plotly_chart(f_pct)    
-    
-    # ----------------------------------
-    #  Interactive figure: Bail Type Totals
-    # ----------------------------------     
-    
-    fig = go.Figure()
-
+    # Plot counts
     for j, bailType in enumerate(bail_types):
         bail_total = arr_year_total[:,j]
         fig.add_trace(go.Bar(
@@ -107,29 +97,158 @@ def app():
                 name=bailType,
                 hoverinfo="text",
                 hovertext=[f"{bailType}: {bailCount:,d} people in {year}"
-                           for bailCount, year in zip(bail_total, years)]
+                           for bailCount, year in zip(bail_total, years)],
+                visible=False
         ))             
 
+    # Formatting
     fig.update_layout(
+        margin={'t':25},
         barmode='stack',
         legend={'traceorder': 'normal'},
         legend_title="Bail Types",
-        title="Breakdown of Bail Types Set: Totals",
+        yaxis_title="Percentage of cases",
         xaxis_title="Year",
-        yaxis_title="Number of People",
         xaxis_tickvals=[0, 1],
-        xaxis_ticktext=["2020","2021 YTD"]
-    )
+        xaxis_ticktext=["2020, total","2021, YTD"]
+    )        
 
+    fig.update_layout(
+        annotations=[
+            dict(text="Select data to view:",
+                 x=-0.6,
+                 y=1.00,
+                 xref="paper",
+                 yref="paper",
+                 align="left",
+                 showarrow=False
+                )
+        ]
+    )    
+    
+    fig.update_layout(
+        updatemenus=[dict(
+            active=0,
+            x=-0.6,
+            y=0.92,
+            xanchor='left',
+            yanchor='top',
+            buttons=list([
+                dict(label="Percentage of cases",
+                     method="update",
+                     args=[{"visible": [True, True, True, True, True,
+                                        False, False, False, False, False]},
+                           {'yaxis': {'title': 'Percentage of cases'}}
+                          ]
+                    ),
+                dict(label="Number of people",
+                     method="update",
+                     args=[{"visible": [False, False, False, False, False,
+                                        True, True, True, True, True]},
+                           {'yaxis': {'title': 'Number of people'}}
+                          ]
+                    )                        
+                ]),
+            )]
+        )        
+        
+
+    
+    f_pct = go.FigureWidget(fig)
+    st.plotly_chart(f_pct)    
+
+    # ----------------------------------
+    #  Interactive figure: monetary bail percentages/counts, monthly comparison
+    # ----------------------------------     
+
+    st.subheader('Monetary bail cases over time')
+    
+    st.write("""So far in 2021, the percentage of cases each month for which monetary bail is set is slightly higher than for the same month in 2020.""")
+
+    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    
+    fig = go.Figure()
+
+    # As percentage of total cases
+    for i, year in enumerate(years):
+        month_data = df_monetary[df_monetary['bail_year'] == year]['pct']
+        fig.add_trace(go.Bar(
+            y=month_data,
+            name=year,
+            hoverinfo="text",
+            hovertext=[f"{m} {year}: {bailPct:.1f}% of cases"
+                       for m, bailPct in zip(months, month_data)],
+            visible=True
+            ))         
+    
+    # As total counts
+    for i, year in enumerate(years):
+        month_data = df_monetary[df_monetary['bail_year'] == year]['count']
+        fig.add_trace(go.Bar(
+            y=month_data,
+            name=year,
+            hoverinfo="text",
+            hovertext=[f"{m} {year}: {bailCount:,d} people"
+                       for m, bailCount in zip(months, month_data)],
+            visible=False
+            ))   
+    
+    # Layout
+    fig.update_layout(
+        margin={'t':25},
+        #title="Monetary bail cases per month",
+        legend_title="Year",
+        yaxis_title="Percentage of cases",
+        xaxis_title="Month",
+        xaxis_tickvals=list(range(12)),
+        xaxis_ticktext=months
+    )
+    
+    fig.update_layout(
+        annotations=[
+            dict(text="Select data to view:",
+                 x=-0.6,
+                 y=1.00,
+                 xref="paper",
+                 yref="paper",
+                 align="left",
+                 showarrow=False
+                )
+        ]
+    )
+    
+    fig.update_layout(
+        updatemenus=[dict(
+            active=0,
+            x=-0.6,
+            y=0.92,
+            xanchor='left',
+            yanchor='top',
+            buttons=list([
+                dict(label="Percentage of cases",
+                     method="update",
+                     args=[{"visible": [True, True, False, False]},
+                           {'yaxis': {'title': 'Percentage of cases'}}
+                          ]
+                    ),
+                dict(label="Number of people",
+                     method="update",
+                     args=[{"visible": [False, False, True, True]},
+                           {'yaxis': {'title': 'Number of people'}}
+                          ]
+                    )                        
+                ]),
+            )]
+        )
+    
     f_total = go.FigureWidget(fig)
-    st.plotly_chart(f_total)
+    st.plotly_chart(f_total)    
     
     # ----------------------------------
     #  Summary table
     # ----------------------------------  
 
-    st.subheader("Monetary Bail")
-    st.write("""In 2020 cases where monetary bail was set, bail was posted in only 44% of cases, meaning that **a majority of people were not able to pay the amount required to be released from jail**.""")
+    st.write("""In 2020 and 2021, the median payment of $0 means that over half of people did not post bail: **a majority of people have not been able to pay the amount required to be released from jail**.""") #bail was posted in only 44% of monetary bail cases
     
     st.table(df_by_numbers)
     

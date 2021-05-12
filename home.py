@@ -24,10 +24,10 @@ def app():
     # What is this app
     st.title('Bail in Philadelphia')
     st.write("""This dashboard provides a summary of the bail situation in Philadelphia **from January 2020 through March 2021**. A summary of how people in Philadelphia have been impacted by **monetary bail** is displayed at the top of each page. You can also explore how bail breaks down...
-- ...by year: how have **bail types and bail amounts set** in 2021 compared to those set in 2020?
-- ...by actor: how has bail depended on the magistrate or other **person setting bail**?
-- ...by price: how much bail have Philadelphians across the city **paid**? 
-- ...by demographics: how has bail differed between **races, genders, and age groups**?
+- by year: how have **bail types and bail amounts set** in 2021 compared to those set in 2020?
+- by actor: how has bail depended on the magistrate or other **person setting bail**?
+- by cost to people: how much bail have Philadelphians across the city **paid**? 
+- by demographics: how has bail differed between **races, genders, and age groups**?
 
 Use the navigation panel on the left to explore.""")    
     st.write(f"Information from the **{n_cases:,d} cases** used to create this dashboard was gathered from [Philadelphia Municipal Court docket sheets.](https://ujsportal.pacourts.us/DocketSheets/MC.aspx#)")
