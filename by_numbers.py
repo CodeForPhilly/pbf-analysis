@@ -72,27 +72,71 @@ def app():
     for j, bailType in enumerate(bail_types):
         bail_pct = arr_year_pct[:, j]
         fig.add_trace(go.Bar(
-                y=[0,1],
-                x=bail_pct,
-                orientation="h",
+                x=[0,1],
+                y=bail_pct,
+                orientation="v",
                 text="",
                 textposition="inside",
                 name=bailType,
                 hoverinfo="text",
                 hovertext=[f"{bailType}: {bailPct:.1f}% of {year} total"
-                           for bailPct, year in zip(bail_pct, years)]
+                           for bailPct, year in zip(bail_pct, years)],
+                visible=True
         ))
+
+    for j, bailType in enumerate(bail_types):
+        bail_total = arr_year_total[:,j]
+        fig.add_trace(go.Bar(
+                x=[0,1],
+                y=bail_total,
+                orientation="v",
+                text="",
+                textposition="inside",
+                name=bailType,
+                hoverinfo="text",
+                hovertext=[f"{bailType}: {bailCount:,d} people in {year}"
+                           for bailCount, year in zip(bail_total, years)],
+                visible=False
+        ))             
 
     fig.update_layout(
         barmode='stack',
         legend={'traceorder': 'normal'},
         legend_title="Bail Types",
         title="Breakdown of bail types set",
-        yaxis_title="Year",
-        xaxis_title="Percentage of cases",
-        yaxis_tickvals=[0, 1],
-        yaxis_ticktext=["2020","2021 YTD"]
-    )
+        yaxis_title="Percentage of cases",
+        xaxis_title="Year",
+        xaxis_tickvals=[0, 1],
+        xaxis_ticktext=["2020, total","2021, YTD"]
+    )        
+        
+    fig.update_layout(
+        updatemenus=[dict(
+            active=0,
+            x=-0.5,
+            y=1,
+            xanchor='left',
+            yanchor='top',
+            buttons=list([
+                dict(label="Percentage of cases",
+                     method="update",
+                     args=[{"visible": [True, True, True, True, True,
+                                        False, False, False, False, False]},
+                           {'yaxis': {'title': 'Percentage of cases'}}
+                          ]
+                    ),
+                dict(label="Number of people",
+                     method="update",
+                     args=[{"visible": [False, False, False, False, False,
+                                        True, True, True, True, True]},
+                           {'yaxis': {'title': 'Number of people'}}
+                          ]
+                    )                        
+                ]),
+            )]
+        )        
+        
+
     
     f_pct = go.FigureWidget(fig)
     st.plotly_chart(f_pct)    
@@ -155,7 +199,7 @@ def app():
             hoverinfo="text",
             hovertext=[f"{m} {year}: {bailPct:.1f}% of cases"
                        for m, bailPct in zip(months, month_data)],
-            visible = True
+            visible=True
             ))         
     
     # As total counts
