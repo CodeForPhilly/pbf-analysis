@@ -58,6 +58,8 @@ def app():
     # ----------------------------------    
     st.title('Breakdown by Demographics')
     
+    st.write("How has bail set differed between **races, genders, and age groups**?")   
+    
     # ----------------------------------
     #  Preprocessing
     # ----------------------------------
@@ -91,8 +93,8 @@ def app():
     # ----------------------------------
     
     dropdown_content = dict(active=0,
-                            x=-0.35,
-                            y=0.9,
+                            x=-0.25,
+                            y=0.92,
                             xanchor='left',
                             yanchor='top',
                             buttons=list([
@@ -108,14 +110,15 @@ def app():
                            )
     
     dropdown_title = dict(text="Select year:",
-                          x=-0.35, 
-                          y=0.98,
+                          x=-0.25, 
+                          y=1,
                           xref="paper",
                           yref="paper",
                           align="left",
                           showarrow=False)
     
-    common_layout = dict(barmode='stack',
+    common_layout = dict(margin={'t':25},
+                         barmode='stack',
                          legend={'traceorder': 'normal'},
                          legend_title="Bail Types",
                          yaxis_title="Percent")
@@ -123,6 +126,7 @@ def app():
     # ----------------------------------
     #  Interactive figure: Bail Type Percentages by Race
     # ----------------------------------
+    st.subheader('Race')
     st.write("In 2020, monetary bail was set more frequently for people identified by the court system as Black than those identified as non-Black (White or Other).")    
     
     fig = go.Figure()
@@ -158,8 +162,7 @@ def app():
                 visible=False
         ))
 
-    fig.update_layout(title="Breakdown of Bail Type by Race",
-                      xaxis_title="Race",
+    fig.update_layout(xaxis_title="Race",
                       xaxis_tickvals=list(range(len(races))),
                       xaxis_ticktext=races)
     
@@ -170,12 +173,12 @@ def app():
     f_pct = go.FigureWidget(fig)
     st.plotly_chart(f_pct)    
 
-    st.write("Note: While additional race categories beyond \"White\" and \"Black\" are recognized by the Pennsylvania court system, these are grouped together as \"Other\" out of anonymization concerns. The Philadelphia Bail Fund has observed that the Philadelphia court system appears to record most non-Black and non-Asian people, such as Latinx and Indigenous people, as White.")
-    st.write("**<font color='red'>Question for PBF</font>**: what disclaimer language would you like to include here? The above was informed by the language in the July 2020 report.", unsafe_allow_html=True)    
+    st.write("*Note*: While additional race categories beyond \"White\" and \"Black\" are recognized by the Pennsylvania court system, these are grouped together as \"Other\" out of anonymization concerns. The Philadelphia Bail Fund has observed that the Philadelphia court system appears to record most non-Black and non-Asian people, such as Latinx and Indigenous people, as White.")
     
     # ----------------------------------
     #  Interactive figure: Bail Type Percentages by Sex
     # ----------------------------------    
+    st.subheader('Sex')
     st.write("In 2020, monetary bail was set more frequently for people identified by the court system as male than those identified as female.")
     
     fig = go.Figure()
@@ -211,8 +214,7 @@ def app():
                 visible=False
         ))
 
-    fig.update_layout(title="Breakdown of Bail Type by Sex",
-                      xaxis_title="Sex",
+    fig.update_layout(xaxis_title="Sex",
                       xaxis_tickvals=list(range(len(sexes))),
                       xaxis_ticktext=sexes)
     
@@ -227,7 +229,8 @@ def app():
     
     # ----------------------------------
     #  Interactive figure: Bail Type Percentages by Age
-    # ----------------------------------    
+    # ----------------------------------
+    st.subheader('Age')
     st.write("In 2020, the frequency of monetary bail decreased with increasing age group.")
     
     fig = go.Figure()
@@ -263,8 +266,7 @@ def app():
                 visible=False
         ))
 
-    fig.update_layout(title="Breakdown of Bail Type by Age",
-                      xaxis_title="Age Group",
+    fig.update_layout(xaxis_title="Age Group",
                       xaxis_tickvals=list(range(len(age_groups))),
                       xaxis_ticktext=age_groups)
     
